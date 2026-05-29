@@ -1,0 +1,33 @@
+{
+    "env": {
+        "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1",
+        "CLAUDE_CODE_USE_TMUX": "true",
+        "DISABLE_AUTOUPDATER": "1"
+    },
+    "permissions": {
+        "allow": [
+            "Bash(git show-branch:*)",
+            "Bash(mkdir:*)",
+            "Bash(git checkout:*)"
+        ],
+        "deny": [],
+        "ask": [],
+        "defaultMode": "plan",
+        "disableAutoMode": "disable",
+        "additionalDirectories": []
+    },
+    "model": "Qwen3.6-35B-A3B",
+    "alwaysThinkingEnabled": true,
+    "effortLevel": "high",
+    "autoUpdatesChannel": "stable",
+    "minimumVersion": "2.1.153",
+    "theme": "dark",
+    "editorMode": "vim",
+    "teammateMode": "tmux",
+    "skipAutoPermissionPrompt": true,
+    "preferences": {
+        "auto_approve_teammates": false,
+        "multi_agent_ui": "panes",
+        "terminal_integration": "ghostty"
+    }
+}
