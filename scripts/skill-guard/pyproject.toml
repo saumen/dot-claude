@@ -1,0 +1,9 @@
+[project]
+name = "skill-guard"
+version = "1.0.0"
+description = "Pre-tool-use hook that blocks inline tool use when a swordy skill requires agent spawning"
+requires-python = ">=3.10"
+dependencies = []
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

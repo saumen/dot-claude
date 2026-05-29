@@ -1,7 +1,7 @@
 ---
-name: swordy-explorer
+name: swordy-explore
 description: >
-  Swordy Explorer: Structured codebase exploration workflow that produces a
+  Swordy Explore: Structured codebase exploration workflow that produces a
   handover document for planning. Map unfamiliar code, trace execution paths,
   identifying affected modules before changes, or gather architectural context.
   Use when exploring a new codebase, mapping affected files, tracing execution
@@ -22,7 +22,7 @@ Orchestrates a structured codebase exploration using the explorer sub-agent and 
 3. After the explorer finishes, write the handover document:
    - Copy the template from `references/exploration_template.md` (sibling directory)
    - Fill in all sections with the explorer's findings
-   - Write to `docs/handovers/01-exploration.md` in the project repo
+   - Write to `docs/explorations/{YYYYMMDDHHMM}__{feature-slug}/exploration.md` in the project repo
 
 ## Agent Routing
 

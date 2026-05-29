@@ -1,6 +1,8 @@
 settings.local.json
 .pytest_cache
 **/__pycache__
+*.egg-info/
+scripts/skill-guard/*.log
 .stfolder-*
 backups
 cache
@@ -25,5 +27,4 @@ todos
 .last-cleanup
 history.jsonl
 mcp-needs-auth-cache.json
-MEMORY.md
 stats-cache.json

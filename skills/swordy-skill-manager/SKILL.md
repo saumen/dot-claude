@@ -162,9 +162,9 @@ Not Applicable. Agent-skill pair creation is a sequential, two-phase process (pl
 - Auditing agent-skill alignment across the skill set
 
 **Do NOT use for:**
-- Planning feature implementations (use plan-feature)
-- Code review (use reviewer)
-- Exploring codebases (use explorer)
+- Planning feature implementations (use swordy-plan-feature)
+- Code review (use swordy-review)
+- Exploring codebases (use swordy-explore)
 
 ## References
 

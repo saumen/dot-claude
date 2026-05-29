@@ -5,7 +5,7 @@ when_to_use: Use when planning a new feature with structured milestones, API des
 
 # Feature Planning Skill
 
-Plans new features with structured decomposition, API design, data model changes, and milestone tracking. This skill **only plans** — implementation requires explicit approval.
+Plans new features with structured decomposition, API design, data model changes, and milestone tracking. This skill **only plans** — it does not implement. Invoke `swordy-plan-execute` to run the plan.
 
 ## Agent Routing
 - **Must be executed by spawning the planner sub-agent using the Agent tool with subagent_type: swordy-agent-planner. Do not execute inline.**
@@ -44,27 +44,18 @@ Plans new features with structured decomposition, API design, data model changes
 - Identify dependencies on external services or third-party APIs
 - Consider backward compatibility and migration paths
 
-### 3. Present findings to user (checkpoint)
-- Show a summary of analysis and design decisions from Steps 1–2
-- **Wait for user acknowledgment** before generating any plan file
-
-### 4. Generate a feature plan
+### 3. Generate a feature plan
 - Copy the plan template from this skill's `references/plan_template.md`
 - Fill in the template with findings from analysis and design
-- Write the plan to `docs/plans/features/{YYYYMMDDHHMM}__{feature-slug}/` in the project repo
+- Write the plan to `docs/plans/{YYYYMMDDHHMM}__{feature-slug}/plan.md` in the project repo
 - Use the checklist categories from the template:
   - **🛠 Production Code** — implementation steps ordered by dependency
   - **🧪 Unit & Integration Tests** — tests for each component
   - **📝 Documentation** — API docs, README updates, migration guides
   - **🔍 Verification** — end-to-end validation and acceptance criteria
 
-### 5. Await approval
-- Present the generated plan to the user
-- **Do not implement anything until the user explicitly approves the plan**
-
-### 6. Implement (after approval)
-- Follow the ordered steps in the plan, respecting dependencies
-- Write tests alongside or before implementation (TDD where applicable)
-- Run the full test suite after each milestone
-- Update documentation as you go
-- Verify all acceptance criteria are met
+### 4. Present findings to user (checkpoint)
+- Show a concise summary of the plan (do not print the whole plan)
+- Tell the user to read the stored plan file for full details
+- **Do not ask for approval and do not implement anything**
+- Suggest the user invoke the `swordy-plan-execute` skill if the plan is good enough

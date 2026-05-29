@@ -1,0 +1,2 @@
+- [Swordy Skill Invocation Protocol](memory/swordy-skill-invocation.md) — Never skip agent spawning for swordy skills; always use the Agent tool as specified in SKILL.md routing
+- [Python App Packaging](memory/python-app-packaging.md) — Python apps must be packaged with pyproject.toml, src/ layout, __main__.py, and tests/

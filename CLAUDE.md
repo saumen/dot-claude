@@ -69,6 +69,16 @@ Local overrides go in `.claude/settings.local.json`.
 - **history.jsonl** is auto-managed — do not edit manually
 - **plugin-catalog-cache.json** is auto-managed — do not edit manually
 
+## Swordy Skill Invocation Protocol
+
+When a swordy skill's SKILL.md specifies **"Must be executed by spawning the [X] sub-agent"**:
+1. Write the skill name to `~/.claude/.active-skill` before invoking the Agent tool
+2. Spawn the correct sub-agent via `Agent` tool with the right `subagent_type`
+3. The `skill-guard.sh` hook (configured in settings.json) blocks inline tools (Bash/Read/Grep/Edit/Write) while the skill is active
+4. The hook auto-clears `.active-skill` when the Agent tool is used
+
+**Never skip agent spawning for "small" tasks.** The hook enforces this.
+
 ## Useful Links
 
 - Claude Code docs: https://code.claude.com/docs/en/overview

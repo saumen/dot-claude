@@ -58,7 +58,7 @@ Plans and executes code restructuring in small, verified steps — always preser
 ### 4. Generate a refactoring plan
 - Copy the plan template from this skill's `references/plan_template.md`
 - Fill in the template with findings from the analysis
-- Write the plan to `docs/plans/refactoring/{YYYYMMDDHHMM}__{feature-slug}/` in the project repo
+- Write the plan to `docs/refactoring/{YYYYMMDDHHMM}__{feature-slug}/refactor.md` in the project repo
 - Use the checklist categories from the template:
   - **🛠 Production Code** — restructuring steps (one logical change at a time)
   - **🧪 Unit & Integration Tests (The Safety Net)** — guardrail tests added before changes

@@ -1,6 +1,6 @@
 ---
 description: >
-  Swordy Reviewer: Structured code review workflow that produces a severity-ranked
+  Swordy Review: Structured code review workflow that produces a severity-ranked
   audit report. Review code changes for correctness, security, performance, and
   test coverage. Use when reviewing pull requests, auditing changes, checking
   performance implications, or assessing test coverage. Triggers on requests like
@@ -20,7 +20,7 @@ Orchestrates a structured code review using the review sub-agent and produces a 
 3. After the reviewer finishes, write the handover document:
    - Copy the template from `references/review_template.md` (sibling directory)
    - Fill in all sections with the reviewer's audit results
-   - Write to `docs/handovers/03-review.md` in the project repo
+   - Write to `docs/reviews/{YYYYMMDDHHMM}__{feature-slug}/review.md` in the project repo
 
 ## Agent Routing
 

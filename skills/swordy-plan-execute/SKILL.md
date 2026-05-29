@@ -15,7 +15,7 @@ Reads a structured plan document, executes its checklist items in order using ta
 ## Workflow
 
 ### 1. Locate the plan document
-- The plan is a markdown file at `docs/plans/{type}/{timestamp}__{slug}/plan.md` (e.g., `docs/plans/features/2026052400__add-oauth-login/plan.md`)
+- The plan is a markdown file at `docs/plans/{YYYYMMDDHHMM}__{feature-slug}/plan.md` (e.g., `docs/plans//2026052400__add-oauth-login/plan.md`)
 - If the user provides a path, use it directly. Otherwise, look for the most recent plan in the relevant subdirectory.
 - Verify the file exists and contains a checklist section.
 
