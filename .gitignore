@@ -28,3 +28,8 @@ todos
 history.jsonl
 mcp-needs-auth-cache.json
 stats-cache.json
+.active-skill
+.last-update-result.json
+daemon.log
+daemon/
+jobs/

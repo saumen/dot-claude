@@ -9,12 +9,12 @@ Feature or component to document: $ARGUMENTS
 ## Parameters
 
 Parse the arguments for optional flags:
-- `--mermaid` or `-m`: Use Mermaid diagram syntax (renders in GitHub/GitLab)
-- Default: Use simple ASCII diagrams
+- `--ascii` or `-a`: Use ASCII diagrams (simple ASCII characters, no rendering needed)
+- Default: Use Mermaid diagram syntax (renders in GitHub/GitLab)
 
 Example usage:
-- `/document-feature PricingModelResult population` (ASCII diagrams)
-- `/document-feature --mermaid PricingModelResult population` (Mermaid diagrams)
+- `/doc-feature PricingModelResult population` (Mermaid diagrams)
+- `/doc-feature --ascii PricingModelResult population` (ASCII diagrams)
 
 ## Instructions
 
@@ -39,7 +39,20 @@ Example usage:
 
 ##### Diagram Style
 
-**Default (ASCII):** Use simple ASCII characters for maximum compatibility:
+**Default (Mermaid):** Use Mermaid syntax for GitHub/GitLab rendering:
+```mermaid
+flowchart LR
+    A[Model Execution] --> B[Features Map]
+    B --> C[Converter]
+    C --> D[Result]
+```
+
+Rules for Mermaid diagrams:
+- Use `flowchart LR` for left-to-right, `flowchart TD` for top-down
+- Keep node labels concise
+- Use subgraphs for grouping related components
+
+**With `--ascii` flag:** Use simple ASCII characters for maximum compatibility:
 ```
 +------------------+     +------------------+     +------------------+
 |                  |     |                  |     |                  |
@@ -59,19 +72,6 @@ Rules for ASCII diagrams:
 - Use `---->` for horizontal arrows, `v` for downward arrows
 - Keep diagrams narrow (max 80 characters wide)
 - Align right edges by counting characters carefully
-
-**With `--mermaid` flag:** Use Mermaid syntax for GitHub/GitLab rendering:
-```mermaid
-flowchart LR
-    A[Model Execution] --> B[Features Map]
-    B --> C[Converter]
-    C --> D[Result]
-```
-
-Rules for Mermaid diagrams:
-- Use `flowchart LR` for left-to-right, `flowchart TD` for top-down
-- Keep node labels concise
-- Use subgraphs for grouping related components
 
 #### Data Flow
 - Step-by-step breakdown of how data moves through the system

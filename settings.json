@@ -1,45 +1,52 @@
 {
-    "env": {
-        "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1",
-        "CLAUDE_CODE_USE_TMUX": "true",
-        "DISABLE_AUTOUPDATER": "1"
-    },
-    "permissions": {
-        "allow": [
-            "Bash(git show-branch:*)",
-            "Bash(mkdir:*)",
-            "Bash(git checkout:*)"
-        ],
-        "deny": [],
-        "ask": [],
-        "disableAutoMode": "disable",
-        "additionalDirectories": []
-    },
-    "model": "Qwen3.6-35B-A3B",
-    "alwaysThinkingEnabled": true,
-    "effortLevel": "high",
-    "autoUpdatesChannel": "stable",
-    "minimumVersion": "2.1.153",
-    "theme": "dark",
-    "editorMode": "vim",
-    "teammateMode": "tmux",
-    "skipAutoPermissionPrompt": true,
-    "hooks": {
-        "PreToolUse": [
-            {
-                "matcher": "Bash|Read|Grep|Edit|Write",
-                "hooks": [
-                    {
-                        "type": "command",
-                        "command": "/Users/swordfish/.claude/scripts/skill-guard/skill-guard.sh"
-                    }
-                ]
-            }
+  "env": {
+    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1",
+    "CLAUDE_CODE_USE_TMUX": "true",
+    "DISABLE_AUTOUPDATER": "1",
+    "CLAUDE_CODE_ENABLE_GATEWAY_MODEL_DISCOVERY": "1",
+    "ANTHROPIC_BASE_URL": "http://192.168.4.110:8080",
+    "ANTHROPIC_AUTH_TOKEN": "none",
+    "ANTHROPIC_DEFAULT_OPUS_MODEL": "Qwen3.6-27B",
+    "ANTHROPIC_DEFAULT_SONNET_MODEL": "Qwen3.6-35B-A3B",
+    "ANTHROPIC_DEFAULT_HAIKU_MODEL": "Qwen3.6-35B-A3B"
+  },
+  "permissions": {
+    "allow": [
+      "Bash(git show-branch:*)",
+      "Bash(mkdir:*)",
+      "Bash(git checkout:*)"
+    ],
+    "deny": [],
+    "ask": [],
+
+    "additionalDirectories": []
+  },
+  "model": "sonnet",
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash|Read|Grep|Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/swordfish/.claude/scripts/skill-guard/skill-guard.sh"
+          }
         ]
-    },
-    "preferences": {
-        "auto_approve_teammates": false,
-        "multi_agent_ui": "panes",
-        "terminal_integration": "ghostty"
-    }
+      }
+    ]
+  },
+  "alwaysThinkingEnabled": true,
+  "effortLevel": "high",
+  "autoUpdatesChannel": "stable",
+  "minimumVersion": "2.1.153",
+  "theme": "dark",
+  "editorMode": "vim",
+  "teammateMode": "tmux",
+  "skipAutoPermissionPrompt": false,
+  "preferences": {
+    "auto_approve_teammates": false,
+    "multi_agent_ui": "panes",
+    "terminal_integration": "ghostty"
+  },
+  "skipWorkflowUsageWarning": true
 }
