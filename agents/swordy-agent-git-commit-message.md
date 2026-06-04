@@ -1,7 +1,7 @@
 ---
 name: swordy-agent-git-commit-message
 description: "Fast agent for generating conventional commit messages from staged git changes."
-tools: Explore
+tools: Bash, Read
 effort: medium
 permissionMode: default
 ---
