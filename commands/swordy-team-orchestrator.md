@@ -16,11 +16,11 @@ Each phase spawns a **typed agent** that reads the corresponding SKILL.md for wo
 
 | Phase | Agent (spawned) | SKILL.md (read for workflow) | Artifact Template |
 |-------|----------------|------------------------------|-------------------|
-| Explore | `swordy-agent-explorer` | `skills/swordy-explore/SKILL.md` | `exploration.md` |
-| Plan | `swordy-agent-planner` | `skills/swordy-plan-feature/SKILL.md` | `plan.md` |
-| Execute | `swordy-agent-execute` | `skills/swordy-plan-execute/SKILL.md` | `solution.py` + updated `plan.md` |
-| Review | `swordy-agent-reviewer` | `skills/swordy-review/SKILL.md` | `review.md` |
-| Deliver | `swordy-agent-git-commit-message` | `skills/swordy-git-commit-message/SKILL.md` | commit message (no file) |
+| Explore | `swordy-agent-explorer` | `/Users/swordfish/.claude/skills/swordy-explore/SKILL.md` | `exploration.md` |
+| Plan | `swordy-agent-planner` | `/Users/swordfish/.claude/skills/swordy-plan-feature/SKILL.md` | `plan.md` |
+| Execute | `swordy-agent-execute` | `/Users/swordfish/.claude/skills/swordy-plan-execute/SKILL.md` | `solution.py` + updated `plan.md` |
+| Review | `swordy-agent-reviewer` | `/Users/swordfish/.claude/skills/swordy-review/SKILL.md` | `review.md` |
+| Deliver | `swordy-agent-git-commit-message` | `/Users/swordfish/.claude/skills/swordy-git-commit-message/SKILL.md` | commit message (no file) |
 
 ## CWD-Independent Handover Protocol
 
@@ -79,30 +79,36 @@ Explore → Plan → Execute → Review → (Fix if review failed) → Review ag
 Your workspace directory is {workspace_dir}.
 Phase: {phase}. Artifact template: {artifact_template}
 
-Read the SKILL.md at {skill_path} for workflow knowledge and domain context. Execute the {phase} workflow directly using your own tools — do NOT use the Skill tool or spawn another agent. {input_doc} Produce the {phase} handover document. Resolve the artifact path as {workspace_dir}/docs/{phase}/{YYYYMMDDHHMM}__{feature-slug}/{artifact_template}. After writing, return the absolute file path and sha256sum checksum.
+1. Read the SKILL.md at {skill_path} and summarize the workflow in 3 bullet points.
+2. {input_doc}
+3. Execute the {phase} workflow directly using your own tools — do NOT use the Skill tool or spawn another agent.
+4. Produce the {phase} handover document at {workspace_dir}/docs/{phase}/{YYYYMMDDHHMM}__{feature-slug}/{artifact_template}.
+5. Return the absolute file path and sha256sum checksum.
 ```
 
 **Team Lead verification:** Read the handover at the returned absolute path, verify checksum (`sha256sum <path>`), validate meaningful content. **If passes → spawn next phase. If fails → send follow-up with specific feedback (do not proceed).**
 
+**Escalation:** If an agent stalls (outputs the same file path or "let me read" narration without emitting a tool call), send **one** follow-up with specific feedback. If it stalls again, intervene directly — read the file yourself and proceed. Never wait more than 2 follow-up turns per agent.
+
 1. **Phase 1 — Explore** (`subagent_type=swordy-agent-explorer`):
-   - `{skill_path}` = `skills/swordy-explore/SKILL.md`, `{artifact_template}` = `exploration.md`
+   - `{skill_path}` = `/Users/swordfish/.claude/skills/swordy-explore/SKILL.md`, `{artifact_template}` = `exploration.md`
    - `{input_doc}` = *(none — explore the problem space directly)*
    - Produces: problem understanding, constraints, relevant patterns, approach notes.
 
 2. **Phase 2 — Plan** (`subagent_type=swordy-agent-planner`):
-   - `{skill_path}` = `skills/swordy-plan-feature/SKILL.md`, `{artifact_template}` = `plan.md`
-   - `{input_doc}` = "Read the exploration handover document from Phase 1 as input context."
+   - `{skill_path}` = `/Users/swordfish/.claude/skills/swordy-plan-feature/SKILL.md`, `{artifact_template}` = `plan.md`
+   - `{input_doc}` = "Use the exploration handover document from Phase 1 as your input context."
    - Produces: structured decomposition, milestone checklist (TASK-XX, TEST-XX, VERIFY-XX), acceptance criteria.
    - Team Lead validates the checklist section.
 
 3. **Phase 3 — Execute** (`subagent_type=swordy-agent-execute`):
-   - `{skill_path}` = `skills/swordy-plan-execute/SKILL.md`, `{artifact_template}` = `solution.py`
-   - `{input_doc}` = "Read the plan handover document from Phase 2 and execute each checklist item sequentially."
+   - `{skill_path}` = `/Users/swordfish/.claude/skills/swordy-plan-execute/SKILL.md`, `{artifact_template}` = `solution.py`
+   - `{input_doc}` = "Execute the plan handover document from Phase 2, following its checklist items sequentially."
    - Produces: solution on disk (code files, test files, updated plan with all `- [x]`).
    - Team Lead verifies solution files exist and plan has all checkboxes completed. If fails → go to Fix.
 
 4. **Phase 4 — Review** (`subagent_type=swordy-agent-reviewer`):
-   - `{skill_path}` = `skills/swordy-review/SKILL.md`, `{artifact_template}` = `review.md`
+   - `{skill_path}` = `/Users/swordfish/.claude/skills/swordy-review/SKILL.md`, `{artifact_template}` = `review.md`
    - `{input_doc}` = "Audit the solution for correctness, security, performance, and test coverage."
    - Produces: severity-ranked findings, verdict (Success/Fail), remediation guidance.
    - **Success → Deliver. Fail → Fix.**
@@ -112,12 +118,12 @@ Read the SKILL.md at {skill_path} for workflow knowledge and domain context. Exe
      ```
      Your workspace directory is {workspace_dir}.
 
-     Read the review handover document from Phase 4. Address each finding and re-implement the solution. Execute the fixes directly using your own tools.
+     Address each finding in the review handover document from Phase 4 and re-implement the solution. Execute the fixes directly using your own tools.
      ```
    - After fix, return to Phase 4. Repeat until Success or max iterations (default: 3).
 
 6. **Phase 6 — Deliver** (`subagent_type=swordy-agent-git-commit-message`):
-   - `{skill_path}` = `skills/swordy-git-commit-message/SKILL.md`
+   - `{skill_path}` = `/Users/swordfish/.claude/skills/swordy-git-commit-message/SKILL.md`
    - `{input_doc}` = "Analyze the staged changes and produce a conventional commit message."
    - Team Lead compiles summary table: `| Challenge Name | Generation Time | Verification Status | Review Iterations |`
    - Present commit message and summary; shut down teammates and delete the team.
