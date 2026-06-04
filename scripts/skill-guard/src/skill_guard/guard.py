@@ -16,9 +16,14 @@ def parse_tool(input_text: str) -> str | None:
 
     Returns None if parsing fails or tool_name is missing.
     """
-    data = json.loads(input_text)
+    if not input_text.strip():
+        return None
+    try:
+        data = json.loads(input_text)
+    except (json.JSONDecodeError, ValueError):
+        return None
     if not isinstance(data, dict):
-        raise ValueError("input is not a JSON object")
+        return None
     return data.get("tool_name")
 
 
@@ -50,6 +55,7 @@ def decide(tool_name: str, skill_name: str | None) -> dict | None:
     if tool_name in INLINE_TOOLS:
         return {
             "hookSpecificOutput": {
+                "hookEventName": "PreToolUse",
                 "permissionDecision": "deny",
                 "reason": (
                     f"swordy skill '{skill_name}' requires agent spawning. "
@@ -66,20 +72,20 @@ def run() -> int:
     """Main entry point. Read stdin, parse, check, decide, output."""
     input_text = sys.stdin.read()
 
-    try:
-        tool_name = parse_tool(input_text)
-    except (json.JSONDecodeError, ValueError) as exc:
-        print(f"skill-guard: malformed JSON input: {exc}", file=sys.stderr)
-        return 1
+    tool_name = parse_tool(input_text)
 
     if tool_name is None:
-        print("skill-guard: missing 'tool_name' in input", file=sys.stderr)
-        return 1
+        # Empty or malformed stdin — Claude Code sometimes sends nothing.
+        # Output a no-op JSON so the hook validator is satisfied.
+        print("{}")
+        return 0
 
     skill_name = check_active_skill()
     decision = decide(tool_name, skill_name)
 
     if decision is not None:
-        sys.stdout.write(json.dumps(decision) + "\n")
+        # Wrap in Claude Code hook response protocol.
+        output = {"hookEventName": "PreToolUse", "hookSpecificOutput": decision["hookSpecificOutput"]}
+        sys.stdout.write(json.dumps(output) + "\n")
 
     return 0

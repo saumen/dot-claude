@@ -25,29 +25,23 @@ class TestParseTool(unittest.TestCase):
     def test_missing_tool_name(self):
         self.assertIsNone(parse_tool('{"other": "field"}'))
 
-    def test_invalid_json_raises(self):
-        with self.assertRaises(json.JSONDecodeError):
-            parse_tool("not json")
+    def test_invalid_json_returns_none(self):
+        self.assertIsNone(parse_tool("not json"))
 
-    def test_array_json_raises(self):
-        with self.assertRaises(ValueError):
-            parse_tool('["Bash"]')
+    def test_array_json_returns_none(self):
+        self.assertIsNone(parse_tool('["Bash"]'))
 
-    def test_string_json_raises(self):
-        with self.assertRaises(ValueError):
-            parse_tool('"Bash"')
+    def test_string_json_returns_none(self):
+        self.assertIsNone(parse_tool('"Bash"'))
 
-    def test_number_json_raises(self):
-        with self.assertRaises(ValueError):
-            parse_tool('42')
+    def test_number_json_returns_none(self):
+        self.assertIsNone(parse_tool('42'))
 
-    def test_null_json_raises(self):
-        with self.assertRaises(ValueError):
-            parse_tool('null')
+    def test_null_json_returns_none(self):
+        self.assertIsNone(parse_tool('null'))
 
-    def test_bool_json_raises(self):
-        with self.assertRaises(ValueError):
-            parse_tool('true')
+    def test_bool_json_returns_none(self):
+        self.assertIsNone(parse_tool('true'))
 
 
 class TestCheckActiveSkill(unittest.TestCase):
@@ -91,6 +85,7 @@ class TestDecide(unittest.TestCase):
         decision = decide("Bash", "my-skill")
         self.assertIsNotNone(decision)
         self.assertEqual(decision["hookSpecificOutput"]["permissionDecision"], "deny")
+        self.assertEqual(decision["hookSpecificOutput"]["hookEventName"], "PreToolUse")
         self.assertIn("my-skill", decision["hookSpecificOutput"]["reason"])
 
     def test_non_inline_non_agent_passes(self):
@@ -144,6 +139,7 @@ class TestRun(unittest.TestCase):
             code, out, err = self._run_with_input('{"tool_name": "Edit"}')
             self.assertEqual(code, 0)
             decision = json.loads(out.strip())
+            self.assertEqual(decision["hookEventName"], "PreToolUse")
             self.assertEqual(decision["hookSpecificOutput"]["permissionDecision"], "deny")
 
     def test_agent_clears_and_passes(self):
@@ -159,20 +155,23 @@ class TestRun(unittest.TestCase):
                 self.assertFalse(fake_path.exists())
         fake_path.unlink(missing_ok=True)
 
-    def test_malformed_json_exits_1(self):
+    def test_malformed_json_passes_through(self):
         code, out, err = self._run_with_input("not valid json")
-        self.assertEqual(code, 1)
-        self.assertIn("malformed", err)
+        self.assertEqual(code, 0)
+        self.assertEqual(out.strip(), "{}")
+        self.assertEqual(err, "")
 
-    def test_non_dict_json_exits_1(self):
+    def test_non_dict_json_passes_through(self):
         code, out, err = self._run_with_input('["Bash"]')
-        self.assertEqual(code, 1)
-        self.assertIn("malformed", err)
+        self.assertEqual(code, 0)
+        self.assertEqual(out.strip(), "{}")
+        self.assertEqual(err, "")
 
-    def test_missing_tool_name_exits_1(self):
+    def test_missing_tool_name_passes_through(self):
         code, out, err = self._run_with_input('{"other": "field"}')
-        self.assertEqual(code, 1)
-        self.assertIn("missing", err)
+        self.assertEqual(code, 0)
+        self.assertEqual(out.strip(), "{}")
+        self.assertEqual(err, "")
 
 
 if __name__ == "__main__":

@@ -33,3 +33,4 @@ stats-cache.json
 daemon.log
 daemon/
 jobs/
+paste-cache/
