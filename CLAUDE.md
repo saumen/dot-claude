@@ -19,6 +19,7 @@ This directory is Claude Code's personal configuration directory (`~/.claude`). 
 
 Located in `commands/*.md`. Trigger with `/command-name`:
 
+- `/swordy-team-orchestrator` — Orchestrates a team of agents to solve an algorithmic challenge.
 - `/code-refactor` — Pattern-based refactor across a scope
 - `/doc-cleanup-questions` — Resolve open questions in a document
 - `/doc-feature` — Document a feature implementation
