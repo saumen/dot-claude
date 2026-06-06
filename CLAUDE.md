@@ -73,12 +73,23 @@ Local overrides go in `.claude/settings.local.json`.
 ## Swordy Skill Invocation Protocol
 
 When a swordy skill's SKILL.md specifies **"Must be executed by spawning the [X] sub-agent"**:
-1. Write the skill name to `~/.claude/.active-skill` before invoking the Agent tool
-2. Spawn the correct sub-agent via `Agent` tool with the right `subagent_type`
-3. The `skill-guard.sh` hook (configured in settings.json) blocks inline tools (Bash/Read/Grep/Edit/Write) while the skill is active
-4. The hook auto-clears `.active-skill` when the Agent tool is used
+1. Spawn the correct sub-agent via `Agent` tool with the right `subagent_type`
 
-**Never skip agent spawning for "small" tasks.** The hook enforces this.
+## Launching Sub-agents
+
+When teammates are spawned, the following environment must be respected. Teammates must use `sonnet` or `opus`.
+
+- For exploratory tasks, planning use `sonnet`.
+- For precise implementation, execution use `opus`.
+
+Example: launch sub-agent
+
+```bash
+export ANTHROPIC_BASE_URL=http://192.168.4.110:8080
+export ANTHROPIC_AUTH_TOKEN=none
+export CLAUDE_CODE_ENABLE_GATEWAY_MODEL_DISCOVERY=1
+claude --permission-mode auto --model [sonnet|opus]
+```
 
 ## Useful Links
 

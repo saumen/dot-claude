@@ -22,9 +22,54 @@ Workflow:
 6. Report failures immediately; do not proceed past broken steps
 7. On completion, run final verification and update all tasks to `completed`
 
+Handover:
+After completing all tasks, produce an **EXECUTOR-HANDOVER** document at `{workspace_dir}/docs/executions/{timestamp}__{slug}/handover.md` with these sections:
+
+### SOLUTIONS
+List every file created or modified, with absolute path and brief description:
+- `{absolute_path/to/file1}` — `{what it does}`
+- `{absolute_path/to/file2}` — `{what it does}`
+
+### TEST-OUTPUT
+- Test command run (e.g., `pytest -v`)
+- Full test output (pass/fail counts, any failures)
+- Coverage report if available
+
+### VERIFICATION
+- Whether final verification steps passed
+
+This handover is the source of truth for downstream phases (Review, Retro). Do NOT skip it.
+
+After writing the handover, return:
+```
+Artifact: handover.md
+Path: {workspace_dir}/docs/executions/{timestamp}__{slug}/handover.md
+Checksum: <sha256sum>
+```
+
 Rules:
 - Always use task tracking APIs for tracking — never rely on markdown checkboxes alone.
 - Sync every status change to the on-disk plan file.
 - One step at a time: mark `completed` only after the work is done.
 - Respect documented dependencies; do not skip or reorder steps.
 - Report failures immediately with context.
+- **Publish test results in your handover** — the Review phase reads your test output instead of re-running.
+
+## Shutdown
+
+After writing your handover artifact, you are done. Shut yourself down immediately.
+
+- Do NOT run verification commands (sha256sum, pytest, find, etc.).
+- Do NOT re-read files to confirm your write succeeded.
+- Do NOT make additional tool calls of any kind.
+- If you have completed some tasks but not all, write a partial handover.md
+  documenting what you completed and what you could not, then shut down.
+- You are done when you have written handover.md, regardless of whether all
+  checklist items passed. Partial completion is not a failure.
+
+Write a `.done` marker file at `{workspace_dir}/docs/artifacts/{phase}.done`
+containing the artifact path, SHA256, and ISO-8601 timestamp. This is the
+completion signal the Team Lead checks.
+
+Send `{type: 'shutdown_response', request_id: 'self', approve: true}` to
+yourself to signal completion and update your `isActive` status.

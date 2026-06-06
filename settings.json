@@ -1,5 +1,6 @@
 {
   "env": {
+    "CLAUDE_CODE_ENABLE_AUTO_MODE": "1",
     "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1",
     "CLAUDE_CODE_USE_TMUX": "true",
     "DISABLE_AUTOUPDATER": "1",
@@ -8,7 +9,8 @@
     "ANTHROPIC_AUTH_TOKEN": "none",
     "ANTHROPIC_DEFAULT_OPUS_MODEL": "Qwen3.6-27B",
     "ANTHROPIC_DEFAULT_SONNET_MODEL": "Qwen3.6-35B-A3B",
-    "ANTHROPIC_DEFAULT_HAIKU_MODEL": "Qwen3.6-35B-A3B"
+    "ANTHROPIC_DEFAULT_HAIKU_MODEL": "Qwen3.6-35B-A3B",
+    "CLAUDE_CODE_SUBAGENT_MODEL": "Qwen3.6-27B"
   },
   "permissions": {
     "allow": [
@@ -35,6 +37,9 @@
       }
     ]
   },
+  "enabledPlugins": {
+    "andrej-karpathy-skills@karpathy-skills": true
+  },
   "extraKnownMarketplaces": {
     "karpathy-skills": {
       "source": {
@@ -56,8 +61,5 @@
     "auto_approve_teammates": true,
     "multi_agent_ui": "panes",
     "terminal_integration": "ghostty"
-  },
-  "enabledPlugins": {
-    "andrej-karpathy-skills@karpathy-skills": true
   }
 }

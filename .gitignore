@@ -34,3 +34,4 @@ daemon.log
 daemon/
 jobs/
 paste-cache/
+env-models
