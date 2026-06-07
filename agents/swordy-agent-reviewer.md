@@ -1,7 +1,7 @@
 ---
 name: swordy-agent-reviewer
 description: "Code reviewer focused on correctness, security, performance, and test coverage."
-tools: Read, Grep, Glob, Bash
+tools: Read, Grep, Glob, Bash, Write, Edit
 effort: high
 permissionMode: default
 ---

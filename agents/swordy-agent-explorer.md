@@ -1,7 +1,7 @@
 ---
 name: swordy-agent-explorer
 description: "Fast codebase explorer for locating files, tracing execution paths, and gathering context before changes."
-tools: Glob, Grep, Read, Write
+tools: Read, Grep, Glob, Bash, Write, Edit
 effort: high
 permissionMode: default
 ---

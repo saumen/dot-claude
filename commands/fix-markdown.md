@@ -33,7 +33,7 @@ Use Prettier to automatically fix markdown formatting and line lengths:
 if [ -f ".markdownlint.json" ]; then
   prettier --write --prose-wrap=always "$ARGUMENTS"
 else
-  prettier --write --prose-wrap=always --print-width=80 "$ARGUMENTS"
+  prettier --write --prose-wrap=always --print-width=120 "$ARGUMENTS"
 fi
 ```
 

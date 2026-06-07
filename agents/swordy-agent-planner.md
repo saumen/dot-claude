@@ -1,7 +1,7 @@
 ---
 name: swordy-agent-planner
 description: "Planning specialist for task decomposition, architecture decisions, cleanup plans, refactoring strategies, and feature design."
-tools: Read, Grep, Glob, Bash, Write
+tools: Read, Grep, Glob, Bash, Write, Edit
 effort: high
 permissionMode: acceptEdits
 ---

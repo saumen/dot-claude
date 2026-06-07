@@ -13,11 +13,7 @@
     "CLAUDE_CODE_SUBAGENT_MODEL": "Qwen3.6-27B"
   },
   "permissions": {
-    "allow": [
-      "Bash(git show-branch:*)",
-      "Bash(mkdir:*)",
-      "Bash(git checkout:*)"
-    ],
+    "allow": ["Bash(git show-branch:*)", "Bash(mkdir:*)", "Bash(git checkout:*)"],
     "deny": [],
     "ask": [],
     "defaultMode": "auto",
@@ -35,16 +31,34 @@
           }
         ]
       }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "date >> /tmp/hook-fired && bash /Users/swordfish/.claude/scripts/md-prettier-hook.sh"
+          }
+        ]
+      }
     ]
   },
   "enabledPlugins": {
-    "andrej-karpathy-skills@karpathy-skills": true
+    "andrej-karpathy-skills@karpathy-skills": true,
+    "swordfish-hello@saumen-claude-marketplace": true
   },
   "extraKnownMarketplaces": {
     "karpathy-skills": {
       "source": {
         "source": "github",
         "repo": "forrestchang/andrej-karpathy-skills"
+      }
+    },
+    "saumen-claude-marketplace": {
+      "source": {
+        "source": "directory",
+        "path": "/Users/swordfish/dev/github/saumen/claude-marketplace"
       }
     }
   },
