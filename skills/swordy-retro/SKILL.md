@@ -35,8 +35,9 @@ Generate retrospective reports based on run logs and artifacts, ensuring consist
 - Track agent spawn/shutdown behavior and manual interventions.
 
 ### 4. Analysis
-- Categorize findings into three sections:
-  - **What Went Wrong:** Issues with root cause, impact, and proposed fixes.
+- Categorize findings into four sections:
+  - **Compliance Audit:** Verify that all phase artifacts (`exploration.md`, `plan.md`, `review.md`, etc.) strictly follow the structure, sections, and tables defined in their respective skill templates. List any omissions or deviations.
+  - **What Went Wrong:** Technical issues with the solution or process, root cause, impact, and proposed fixes.
   - **What Went Well:** Things that worked effectively.
   - **What Would Make It Faster:** Actionable improvements for next time.
 

@@ -1,0 +1,125 @@
+---
+name: swordy-solo-orchestrator
+description: Orchestrates a multi-phase challenge-solving workflow within the same session using swordy-* skills. Each phase reads its SKILL.md for workflow knowledge and executes directly — no agents spawned. Phase artifacts are stored as handover documents that feed the next phase.
+usage: /swordy-solo-orchestrator [problem_statement | file_path]
+---
+
+# Swordy Solo Orchestrator: Same-Session Workflow Orchestration
+
+## Objective
+
+Solve an independent, deterministic challenge using a phased workflow executed entirely within the **same session**. No agents are spawned. Each phase reads its `swordy-*` SKILL.md for workflow knowledge and executes directly using the current agent's tools. Phase artifacts serve as handovers to the next phase.
+
+## Phase-to-Skill Mapping
+
+| Phase | SKILL.md (read for workflow) | Artifact | Input | Output |
+|-------|------------------------------|----------|-------|--------|
+| Explore | `.../swordy-explore/SKILL.md` | `exploration.md` | None | Problem understanding, constraints, patterns, approach notes |
+| Plan | `.../swordy-plan-feature/SKILL.md` | `plan.md` | Exploration handover | Decomposition, milestone checklist (TASK/TEST/VERIFY-XX), acceptance criteria |
+| Execute | `.../swordy-plan-execute/SKILL.md` | Solution files + updated `plan.md` + `handover.md` | Plan checklist | Solution files, updated plan (all `- [x]`), handover |
+| Review | `.../swordy-review/SKILL.md` | `review.md` | Executor handover + solution files | Audit of correctness/security/performance/coverage; verdict: Success→Deliver, Fail→Fix |
+| Fix | *(current agent, no skill)* | Updated solution files | Review findings | Fixed solution → returns to Review (max 3 iterations) |
+| Deliver | `.../swordy-git-commit-message/SKILL.md` | Commit message | Staged changes | Commit message + summary table |
+| Retro | `.../swordy-retro/SKILL.md` | `retro.md` | All prior handovers + solution files | Timeline, Compliance Audit, What Went Wrong/Well, Summary Table, Key Insight → Teardown |
+
+## Handover Protocol (Same-Session Artifacts)
+
+All artifacts are written to the **project repo** under `docs/{phase}/`. The workspace directory is the project root (inferred from CWD or the repo containing the problem statement file).
+
+### Artifact Paths
+
+| Phase | Artifact | Path |
+|-------|----------|------|
+| Explore | `exploration.md` | `{workspace_dir}/docs/explorations/{YYYYMMDDHHMM}__{feature-slug}/exploration.md` |
+| Plan | `plan.md` | `{workspace_dir}/docs/plans/{YYYYMMDDHHMM}__{feature-slug}/plan.md` |
+| Execute | `handover.md` + solution files | `{workspace_dir}/docs/executions/{YYYYMMDDHHMM}__{feature-slug}/handover.md` |
+| Review | `review.md` | `{workspace_dir}/docs/reviews/{YYYYMMDDHHMM}__{feature-slug}/review.md` |
+| Retro | `retro.md` | `{workspace_dir}/docs/retros/{YYYYMMDDHHMM}__{feature-slug}/retro.md` |
+
+### Handoff Map (artifact feeds the next phase)
+
+| From Phase | Artifact | To Phase |
+|------------|----------|----------|
+| Explore | `exploration.md` | Plan |
+| Plan | `plan.md` | Execute |
+| Execute | Handover + solution files | Review |
+| Review | `review.md` | Fix (if failed) or Deliver |
+| Fix | Updated solution files | Review (re-entry) |
+| Deliver | Commit message + summary table | Retro |
+| Retro | `retro.md` | Teardown |
+
+### Artifact Verification
+
+After writing each artifact:
+1. **Read it back** to confirm content was written correctly.
+2. **Validate** it strictly follows the structure, sections, and tables defined in the skill's template (usually found in `references/*.md` within the skill directory).
+3. **If invalid** — rewrite immediately with specific feedback. Do not proceed.
+
+## Orchestration Protocol (Same Session)
+
+### Golden Rules
+
+1. **Sequential execution only** — one phase at a time, in order.
+2. **Read SKILL.md at the start of each phase** — summarize the workflow in 3 bullet points **and identify the required template path (e.g., `references/*.md`)** before executing.
+3. **Execute directly** — use your own tools (read, edit, write, bash). Do NOT spawn sub-agents or use the Skill tool.
+4. **Write handover artifacts** after each phase — they are the contract for the next phase.
+5. **Use accurate timestamps** — Always use `bash` with `TZ="America/Los_Angeles"` to get the current datetime in PT for filenames and any timeline entries. Do not assume or hallucinate the time.
+
+### Phase Sequence
+
+```
+Explore → Plan → Execute → Review → (Fix if review failed) → Review again → ... → Deliver → Retro → Teardown
+```
+
+### Phase Execution Template
+
+For each phase, follow this pattern:
+
+```
+1. Read the SKILL.md at {skill_path}, summarize the workflow in 3 bullet points, and identify the required template path.
+2. Read the input handover artifact from the previous phase (if any).
+3. Execute the {phase} workflow directly using your own tools.
+4. Produce the {phase} artifact at {workspace_dir}/docs/{phase}/{YYYYMMDDHHMM}__{feature-slug}/{artifact_name}.
+   **IMPORTANT: Ensure the artifact strictly adheres to the structure and sections of the identified template. Use `bash` to get the current datetime in PT (e.g., `TZ="America/Los_Angeles" date +"%Y%m%d%H%M"`) for the filename and any timestamps in the content.**
+5. Read back the artifact to verify it was written correctly.
+6. Present a concise summary of the phase output to the user.
+7. Proceed to the next phase (unless a checkpoint requires user input).
+```
+
+### Safeguards
+
+#### Fix Loop
+
+- Maximum **3 iterations** of Review → Fix → Review.
+- If the review still fails after 3 fix iterations, report the verdict to the user and proceed to Deliver with a note about remaining issues.
+
+#### Stuck Detection
+
+- If a phase produces no meaningful output after 2 attempts, interrupt and ask the user for guidance.
+- Never loop more than 2 times on the same phase without user input.
+
+#### Prerequisite Checks
+
+| Phase | Prerequisite | Action if missing |
+|-------|-------------|-------------------|
+| Plan | Explore handover exists | Skip to Plan with empty context |
+| Execute | Plan checklist section exists | Ask user to run Plan phase first |
+| Review | Execute handover exists | Skip to Review with "no solution" note |
+| Deliver | Review verdict is Success | Skip if review failed and max iterations reached |
+| Deliver | Git repo exists | Skip with note: "no git repo — deliver phase skipped" |
+| Retro | All prior phase handovers exist | Use available handovers; mark missing as "N/A" |
+
+## Problem Statement
+**The problem statement is provided as an argument to this command.**
+
+- If the argument is a string, use it directly.
+- If the argument is a file path, `Read` the file and use its content.
+
+**Default Problem Statement (if no argument):** Perform deterministic topological sort on DAG `{"X":["Y","Z"],"Y":["W"],"Z":["W"],"W":[]}` with cycle detection, returning `["X","Z","Y","W"]`.
+
+## Quick Reference
+
+- Same-session execution — no agents spawned.
+- Fix loop max iterations — 3.
+- Checkpoint after Plan and Review verdicts.
+- SKILL.md read for workflow knowledge only; execute directly.
