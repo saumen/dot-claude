@@ -50,13 +50,21 @@ Checksum: <sha256sum>
 | Deliver | Commit message + summary table | (no file) | Retro |
 | Retro | `retro.md` | `{workspace_dir}/docs/retros/{timestamp}__{slug}/retro.md` | Teardown |
 
-### Team Lead Verification
+### Team Lead Verification & Transition Contract
 
-1. Read the handover at the returned absolute path.
-2. Run `sha256sum <path>` and **compare the output against the checksum the agent returned**.
-3. Validate meaningful content (non-empty, relevant to the phase).
-**If checksums don't match → protocol violation. Reject the artifact and ask the agent to rewrite.** Do not proceed past a checksum mismatch.
-**If passes → spawn next phase. If fails → send follow-up with specific feedback (do not proceed).**
+Every phase transition is a contractual handshake. The agent must not simply return a path; it must provide a transition contract.
+
+1. **Agent Requirement:** The agent must append a `## Phase Transition Contract` section to the artifact before returning.
+   - Must include: `Start Time`, `End Time`, `Artifact SHA256`, and a `Proof of Work` list (actual tool calls made).
+2. **Lead Verification Gate:**
+   - **Integrity:** Read the handover at the returned absolute path. Run `sha256sum` and compare against the contract.
+   - **Evidence:** Cross-reference the `Proof of Work` list against the agent's tool-call history in the session logs. **Any discrepancy = Protocol Violation.**
+   - **Substance:** Validate meaningful content (non-empty, relevant to phase).
+   - **Duration:** Ensure `End - Start` is reasonable.
+3. **Verdict:**
+   - **APPROVED:** Spawn next phase.
+   - **REJECTED:** Send follow-up with specific evidence gaps. Do not proceed.
+
 
 ## Orchestration Protocol (Team of Agents)
 
@@ -82,9 +90,10 @@ Phase: {phase}. Artifact template: {artifact_template}
 2. {input_doc}
 3. Execute the {phase} workflow directly using your own tools — see Golden Rules for skill invocation policy.
 4. Produce the {phase} handover document at {workspace_dir}/docs/{phase}/{YYYYMMDDHHMM}__{feature-slug}/{artifact_template}.
-5. Compute the SHA256 of your artifact using `sha256sum <path>` and include the
+5. **Create the Phase Transition Contract:** Append a `## Phase Transition Contract` section to the artifact including Start/End timestamps, SHA256 checksum, and a bulleted Proof of Work (PoW) list of every tool call made during this phase.
+6. Compute the SHA256 of your artifact using `sha256sum <path>` and include the
    actual output in your return. Do not fabricate or estimate checksums.
-6. After writing your artifact, follow the Shutdown Protocol section to terminate.
+7. After writing your artifact, follow the Shutdown Protocol section to terminate.
 ```
 
 ### Safeguards

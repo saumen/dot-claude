@@ -1,5 +1,6 @@
 - [Swordy Skill Invocation Protocol](memory/swordy-skill-invocation.md) — Never skip agent spawning for swordy skills;
   always use the Agent tool as specified in SKILL.md routing
+- [Protocol Failure: Boundary Violation](memories/memory-protocol-failure-20260609.md) — Do NOT combine plan and execute in one turn; wait for explicit approval.
 - [Python App Packaging](memory/python-app-packaging.md) — Python apps must be packaged with pyproject.toml, src/
   layout, **main**.py, and tests/
 - **Always adhere to the latest Claude Code documentation and standard conventions for all commands, skills, and agent

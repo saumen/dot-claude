@@ -48,12 +48,19 @@ All artifacts are written to the **project repo** under `docs/{phase}/`. The wor
 | Deliver | Commit message + summary table | Retro |
 | Retro | `retro.md` | Teardown |
 
-### Artifact Verification
+### Artifact Verification & Transition Contract
 
 After writing each artifact:
-1. **Read it back** to confirm content was written correctly.
-2. **Validate** it strictly follows the structure, sections, and tables defined in the skill's template (usually found in `references/*.md` within the skill directory).
-3. **If invalid** — rewrite immediately with specific feedback. Do not proceed.
+1. **Append a "Phase Transition Contract" section** to the bottom of the artifact (see `docs/designs/phase-transition-contract.md` for schema).
+   - Include: Start/End timestamps, SHA256 hash, and a bulleted **Proof of Work (PoW)** list of actual tool calls made.
+2. **Read it back** to confirm content and contract were written correctly.
+3. **Lead Verification Gate:** Before proceeding to the next phase, the Lead must verify:
+   - **Integrity:** SHA256 matches.
+   - **Evidence:** PoW list matches actual session history tool calls.
+   - **Substance:** Artifact is substantive (not "thin").
+   - **Duration:** Timing is reasonable.
+4. **Verdict:** If verification fails, the phase is **REJECTED**; the agent must perform missing work and regenerate the artifact. If it passes, the transition is **APPROVED**.
+
 
 ## Orchestration Protocol (Same Session)
 
@@ -80,10 +87,11 @@ For each phase, follow this pattern:
 2. Read the input handover artifact from the previous phase (if any).
 3. Execute the {phase} workflow directly using your own tools.
 4. Produce the {phase} artifact at {workspace_dir}/docs/{phase}/{YYYYMMDDHHMM}__{feature-slug}/{artifact_name}.
-   **IMPORTANT: Ensure the artifact strictly adheres to the structure and sections of the identified template. Use `bash` to get the current datetime in PT (e.g., `TZ="America/Los_Angeles" date +"%Y%m%d%H%M"`) for the filename and any timestamps in the content.**
-5. Read back the artifact to verify it was written correctly.
-6. Present a concise summary of the phase output to the user.
-7. Proceed to the next phase (unless a checkpoint requires user input).
+   **IMPORTANT: Ensure the artifact strictly adheres to the structure and sections of the identified template.**
+5. **Create the Phase Transition Contract:** Append the contract section (Timestamps, SHA256, PoW) to the artifact.
+6. **Lead Verification Gate:** Cross-reference PoW vs Session History and validate substance. 
+7. **Verdict:** If APPROVED, read back the artifact and present a concise summary to the user. If REJECTED, return to step 3.
+8. Proceed to the next phase (unless a checkpoint requires user input).
 ```
 
 ### Safeguards
