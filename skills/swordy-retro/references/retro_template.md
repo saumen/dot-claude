@@ -40,6 +40,14 @@ Audit log of all events during the run. Timestamps from file mtimes and spawn re
 
 ## What Went Wrong
 
+### Compliance Audit
+| Artifact | Status | Missing/Incorrect Elements |
+|-----------|--------|----------------------------|
+| `exploration.md` | ✅/❌ | |
+| `plan.md` | ✅/❌ | |
+| `review.md` | ✅/❌ | |
+| `handover.md` | ✅/❌ | |
+
 ### {N}. {short_title}
 
 {description of what happened}

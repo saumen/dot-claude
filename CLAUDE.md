@@ -1,19 +1,20 @@
 # CLAUDE.md
 
-This directory is Claude Code's personal configuration directory (`~/.claude`). It is managed by Claude Code and contains user-level configuration, commands, skills, and plugins.
+This directory is Claude Code's personal configuration directory (`~/.claude`). It is managed by Claude Code and
+contains user-level configuration, commands, skills, and plugins.
 
 ## Directory Structure
 
-| Path | Purpose |
-|------|---------|
-| `settings.json` | Global Claude Code settings (env vars, permissions, model, theme, etc.) |
-| `.claude/settings.local.json` | Local permission overrides |
-| `commands/*.md` | Custom slash commands (e.g., `/code-refactor`, `/doc-feature`, `/gdrive-sync`) |
-| `skills/trip-drive-times/` | Custom skill for updating drive times in Marp road trip plans |
-| `plugins/` | Installed plugins and marketplace cache |
-| `projects/` | Per-project CLAUDE.md files and settings |
-| `history.jsonl` | Conversation history |
-| `MEMORY.md` | Index for the file-based memory system |
+| Path                          | Purpose                                                                        |
+| ----------------------------- | ------------------------------------------------------------------------------ |
+| `settings.json`               | Global Claude Code settings (env vars, permissions, model, theme, etc.)        |
+| `.claude/settings.local.json` | Local permission overrides                                                     |
+| `commands/*.md`               | Custom slash commands (e.g., `/code-refactor`, `/doc-feature`, `/gdrive-sync`) |
+| `skills/trip-drive-times/`    | Custom skill for updating drive times in Marp road trip plans                  |
+| `plugins/`                    | Installed plugins and marketplace cache                                        |
+| `projects/`                   | Per-project CLAUDE.md files and settings                                       |
+| `history.jsonl`               | Conversation history                                                           |
+| `MEMORY.md`                   | Index for the file-based memory system                                         |
 
 ## Custom Commands (Slash Commands)
 
@@ -34,11 +35,13 @@ Located in `commands/*.md`. Trigger with `/command-name`:
 
 Located in `skills/`:
 
-- **trip-drive-times** — Query Google Maps for traffic-adjusted drive times and update Marp road trip plan slide decks. Uses `skills/trip-drive-times/scripts/query-legs.py`.
+- **trip-drive-times** — Query Google Maps for traffic-adjusted drive times and update Marp road trip plan slide decks.
+  Uses `skills/trip-drive-times/scripts/query-legs.py`.
 
 ## Plugins
 
-Installed via `plugins/marketplaces/`. The official marketplace is `claude-plugins-official`. Plugins are managed through the plugin catalog system — do not manually edit `plugin-catalog-cache.json` or `blocklist.json`.
+Installed via `plugins/marketplaces/`. The official marketplace is `claude-plugins-official`. Plugins are managed
+through the plugin catalog system — do not manually edit `plugin-catalog-cache.json` or `blocklist.json`.
 
 ## Memory System
 
@@ -65,7 +68,8 @@ Local overrides go in `.claude/settings.local.json`.
 - **Custom commands** should be placed in `commands/` as `.md` files with frontmatter headers
 - **Skills** should be placed in `skills/` with a `SKILL.md` entrypoint
 - **Per-project settings** go in `projects/<project-name>/` (CLAUDE.md + settings)
-- **Memory files** should use the frontmatter format (`name`, `description`, `metadata.type`) and be referenced from `MEMORY.md`
+- **Memory files** should use the frontmatter format (`name`, `description`, `metadata.type`) and be referenced from
+  `MEMORY.md`
 - **Plugins** should be installed via the marketplace, not manually
 - **history.jsonl** is auto-managed — do not edit manually
 - **plugin-catalog-cache.json** is auto-managed — do not edit manually
@@ -73,6 +77,7 @@ Local overrides go in `.claude/settings.local.json`.
 ## Swordy Skill Invocation Protocol
 
 When a swordy skill's SKILL.md specifies **"Must be executed by spawning the [X] sub-agent"**:
+
 1. Spawn the correct sub-agent via `Agent` tool with the right `subagent_type`
 
 ## Launching Sub-agents

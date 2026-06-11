@@ -38,12 +38,16 @@ Reads a structured plan document, executes its checklist items in order using ta
   4. **Sync to disk**: Update the corresponding checkbox in the plan file on disk from `- [ ]` to `- [x]`.
 - Run the test suite or verification commands after each milestone if the plan specifies it.
 
-### 5. Handle failures
+### 5. Handle failures and Handoff
 - If a step fails, stop and report the failure with context.
 - Do not proceed to subsequent steps until the failure is resolved.
 - Update the failed step's status via TaskUpdate (not `completed`) in both task tracking and the on-disk plan file.
-- **Partial completion:** If you cannot complete all tasks, write a partial handover.md documenting what you completed and what you could not, then shut down. Partial completion is not a failure — write the handover and stop.
-- **Shutdown Response Path B:** After writing your handover (complete or partial), send `{type: 'shutdown_response', request_id: 'self', approve: true}` to yourself to signal completion and update your `isActive` status.
+- **Handover Generation**: Once the execution is finished (whether complete or partial), produce the `handover.md` artifact:
+  - Copy the template from `references/implementation_template.md`.
+  - Fill in the summary of changes and verification results.
+  - Write to `docs/executions/{YYYYMMDDHHMM}__{feature-slug}/handover.md`.
+- **Partial completion**: If you cannot complete all tasks, document exactly what was completed and why the rest was stopped in the handover.
+- **Shutdown Response Path B**: After writing your handover, send `{type: 'shutdown_response', request_id: 'self', approve: true}` to yourself to signal completion and update your `isActive` status.
 
 ### 6. Final verification
 - After all tasks are completed, run the plan's verification steps (e.g., full test suite, integration tests).

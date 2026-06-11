@@ -13,11 +13,7 @@
     "CLAUDE_CODE_SUBAGENT_MODEL": "Qwen3.6-27B"
   },
   "permissions": {
-    "allow": [
-      "Bash(git show-branch:*)",
-      "Bash(mkdir:*)",
-      "Bash(git checkout:*)"
-    ],
+    "allow": ["Bash(git show-branch:*)", "Bash(mkdir:*)", "Bash(git checkout:*)"],
     "deny": [],
     "ask": [],
     "defaultMode": "auto",
@@ -32,6 +28,17 @@
           {
             "type": "command",
             "command": "echo 'disabled' || /Users/swordfish/.claude/scripts/skill-guard/skill-guard.sh"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash /Users/swordfish/.claude/scripts/md-prettier-hook.sh"
           }
         ]
       }
