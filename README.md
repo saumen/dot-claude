@@ -5,6 +5,8 @@ skills, and plugins for Claude Code.
 
 ## Directory Structure
 
+| Component | Description |
+| :--- | :--- |
 | `agents/` | Specialized sub-agents (e.g., Planner, Executor, Reviewer) |
 | `commands/` | Custom slash commands (e.g., `/code-refactor`, `/doc-feature`) |
 | `skills/` | Custom agent skills with `SKILL.md` entrypoints |
