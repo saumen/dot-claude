@@ -1,72 +1,72 @@
 {
-  "env": {
-    "CLAUDE_CODE_ENABLE_AUTO_MODE": "1",
-    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1",
-    "CLAUDE_CODE_USE_TMUX": "true",
-    "DISABLE_AUTOUPDATER": "1",
-    "CLAUDE_CODE_ENABLE_GATEWAY_MODEL_DISCOVERY": "1",
-    "ANTHROPIC_BASE_URL": "http://192.168.4.110:8080",
-    "ANTHROPIC_AUTH_TOKEN": "none",
-    "ANTHROPIC_DEFAULT_OPUS_MODEL": "Qwen3.6-27B",
-    "ANTHROPIC_DEFAULT_SONNET_MODEL": "Qwen3.6-35B-A3B",
-    "ANTHROPIC_DEFAULT_HAIKU_MODEL": "Qwen3.6-35B-A3B",
-    "CLAUDE_CODE_SUBAGENT_MODEL": "Qwen3.6-27B"
-  },
-  "permissions": {
-    "allow": ["Bash(git show-branch:*)", "Bash(mkdir:*)", "Bash(git checkout:*)"],
-    "deny": [],
-    "ask": [],
-    "defaultMode": "auto",
-    "additionalDirectories": []
-  },
-  "model": "sonnet",
-  "hooks": {
-    "PreToolUse": [
-      {
-        "matcher": "Bash|Read|Grep|Edit|Write",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "echo 'disabled' || /Users/swordfish/.claude/scripts/skill-guard/skill-guard.sh"
-          }
+    "env": {
+        "CLAUDE_CODE_ENABLE_AUTO_MODE": "1",
+        "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1",
+        "CLAUDE_CODE_USE_TMUX": "true",
+        "DISABLE_AUTOUPDATER": "1",
+        "CLAUDE_CODE_ENABLE_GATEWAY_MODEL_DISCOVERY": "1",
+        "ANTHROPIC_BASE_URL": "http://192.168.4.110:8080",
+        "ANTHROPIC_AUTH_TOKEN": "none",
+        "ANTHROPIC_DEFAULT_OPUS_MODEL": "Qwen3.6-27B",
+        "ANTHROPIC_DEFAULT_SONNET_MODEL": "Qwen3.6-35B-A3B",
+        "ANTHROPIC_DEFAULT_HAIKU_MODEL": "Qwen3.6-35B-A3B",
+        "CLAUDE_CODE_SUBAGENT_MODEL": "Qwen3.6-27B"
+    },
+    "permissions": {
+        "allow": ["Bash(git show-branch:*)", "Bash(mkdir:*)", "Bash(git checkout:*)"],
+        "deny": [],
+        "ask": [],
+        "defaultMode": "auto",
+        "additionalDirectories": []
+    },
+    "model": "sonnet",
+    "hooks": {
+        "PreToolUse": [
+            {
+                "matcher": "Bash|Read|Grep|Edit|Write",
+                "hooks": [
+                    {
+                        "type": "command",
+                        "command": "echo 'disabled' || /Users/swordfish/.claude/scripts/skill-guard/skill-guard.sh"
+                    }
+                ]
+            }
+        ],
+        "PostToolUse": [
+            {
+                "matcher": "Write|Edit",
+                "hooks": [
+                    {
+                        "type": "command",
+                        "command": "date >> /tmp/hook-fired && bash /Users/swordfish/.claude/scripts/md-prettier-hook.sh"
+                    }
+                ]
+            }
         ]
-      }
-    ],
-    "PostToolUse": [
-      {
-        "matcher": "Write|Edit",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "bash /Users/swordfish/.claude/scripts/md-prettier-hook.sh"
-          }
-        ]
-      }
-    ]
-  },
-  "enabledPlugins": {
-    "andrej-karpathy-skills@karpathy-skills": true
-  },
-  "extraKnownMarketplaces": {
-    "karpathy-skills": {
-      "source": {
-        "source": "github",
-        "repo": "forrestchang/andrej-karpathy-skills"
-      }
+    },
+    "enabledPlugins": {
+        "andrej-karpathy-skills@karpathy-skills": true
+    },
+    "extraKnownMarketplaces": {
+        "karpathy-skills": {
+            "source": {
+                "source": "github",
+                "repo": "forrestchang/andrej-karpathy-skills"
+            }
+        }
+    },
+    "alwaysThinkingEnabled": true,
+    "effortLevel": "high",
+    "autoUpdatesChannel": "stable",
+    "minimumVersion": "2.1.161",
+    "skipWorkflowUsageWarning": true,
+    "theme": "dark",
+    "editorMode": "vim",
+    "teammateMode": "tmux",
+    "skipAutoPermissionPrompt": false,
+    "preferences": {
+        "auto_approve_teammates": true,
+        "multi_agent_ui": "panes",
+        "terminal_integration": "ghostty"
     }
-  },
-  "alwaysThinkingEnabled": true,
-  "effortLevel": "high",
-  "autoUpdatesChannel": "stable",
-  "minimumVersion": "2.1.161",
-  "skipWorkflowUsageWarning": true,
-  "theme": "dark",
-  "editorMode": "vim",
-  "teammateMode": "tmux",
-  "skipAutoPermissionPrompt": false,
-  "preferences": {
-    "auto_approve_teammates": true,
-    "multi_agent_ui": "panes",
-    "terminal_integration": "ghostty"
-  }
 }
