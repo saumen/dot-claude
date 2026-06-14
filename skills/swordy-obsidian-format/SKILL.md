@@ -7,7 +7,7 @@ when_to_use:
   metadata, tags, and Obsidian-flavored syntax.
 ---
 
-- **Must be executed by spawning a `swordy-agent-execute` sub-agent.** Do not execute inline.
+- **Must be executed by spawning the `swordy-agent-execute` sub-agent.** Do not execute inline.
 - **Fallback:** If the `swordy-agent-execute` agent fails twice (stream disconnect or other error), run the workflow
   inline using this skill's steps. Do not retry the agent.
 
@@ -22,7 +22,7 @@ when_to_use:
    - Ensure the process remains **lossless** regarding the core information.
 4. **Metadata Extraction & Generation:**
    - Extract or generate a clean `title` from the filename.
-   - Determine relevant `tags` based on the content.
+   - Determine relevant `tags` based on the content (see [Obsidian Tagging Specialist](./swordfish-obsidian-tag-reference.md) for specialized logic).
    - Capture current date/time for `created` and `updated` fields.
 5. **Transformation (Obsidian Flavor):**
    - Apply the standard Obsidian template:
@@ -41,8 +41,7 @@ when_to_use:
      {{CONTENT}}
      ```
 
-   - **Tag Validation:** Ensure all generated tags follow Obsidian's tag rules (e.g., use letters, numbers, underscores
-     `_`, hyphens `-`, or forward slashes `/` for nesting; avoid spaces, periods `.`, or other special characters).
+   - **Tag Validation:** Ensure all generated tags follow Obsidian's tag rules (e.g., use letters, numbers, hyphens `-`, or forward slashes `/` for nesting; avoid spaces, periods `.`, or other special characters). For more detailed tagging logic, refer to the [Obsidian Tagging Specialist prompt](./swordfish-obsidian-tag-reference.md).
    - Convert standard Markdown links to `[[wikilinks]]` if appropriate for the context.
    - Ensure any admonitions or alerts are converted to Obsidian callout syntax (e.g., `> [!info]`).
 
@@ -52,7 +51,7 @@ when_to_use:
 
 ## Agent Routing
 
-- **Implementation phase:** Must be executed by spawning the execute sub-agent using the Agent tool with
+- **Implementation phase:** Must be executed by spawning the `swordy-agent-execute` sub-agent using the Agent tool with
   `subagent_type: swordy-agent-execute`. Do not implement inline.
 - **Fallback:** If the `swordy-agent-execute` agent fails twice, run the workflow inline using this skill's steps.
 
