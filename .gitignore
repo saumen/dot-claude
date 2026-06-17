@@ -35,3 +35,4 @@ daemon/
 jobs/
 paste-cache/
 env-models
+.pi-lens
