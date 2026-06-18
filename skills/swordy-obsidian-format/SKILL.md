@@ -16,6 +16,7 @@ when_to_use:
 1. **Discovery:** Identify the target file(s) or directory provided by the user.
 2. **Documentation Fetch:** Search and fetch the latest Obsidian Markdown guidance (specifically for Wikilinks,
    Callouts, and Properties/Frontmatter) to ensure compliance with the latest Obsidian version.
+   See: <https://obsidian.md/help/obsidian-flavored-markdown>
 3. **Normalization (Optional):**
    - If requested, or if the file is identified as containing significant noise/redundancy, invoke
      `swordy-compact-markdown` to clean the content.
@@ -32,8 +33,9 @@ when_to_use:
      title: "{{TITLE}}"
      created: { { DATE } }
      updated: { { DATE } }
-     tags: [{ { TAGS } }]
-     status: processed
+     tags:
+       - tag1
+       - tag2
      ---
 
      # {{TITLE}}
@@ -41,7 +43,22 @@ when_to_use:
      {{CONTENT}}
      ```
 
-   - **Tag Validation:** Ensure all generated tags follow Obsidian's tag rules (e.g., use letters, numbers, hyphens `-`, or forward slashes `/` for nesting; avoid spaces, periods `.`, or other special characters). For more detailed tagging logic, refer to the [Obsidian Tagging Specialist prompt](./swordfish-obsidian-tag-reference.md).
+   - **Tag Validation:** Ensure all generated tags follow Obsidian's tag rules:
+     - Use letters, numbers, hyphens (`-`), or forward slashes (`/`) for nesting.
+     - Avoid spaces, periods (`.`), and other special characters.
+     - Tags MUST use block-style YAML lists (`- tag`), never inline arrays (`[tag]`).
+       Inline arrays are syntactically valid YAML but do not render as clickable tags in
+       Obsidian's Properties UI. (See retro: 202606181005__fix-obsidian-tags-retro.md)
+     - Numeric or boolean-looking tags MUST NOT be purely numeric — Obsidian rejects
+       purely numeric tag names regardless of YAML quoting. Prefix with a word instead:
+       `year-2026` (not `'2026'`), `version-1` (not `'1'`). Boolean-looking tags should
+       also be prefixed: `draft-status` (not `'true'`).
+     - No `#` prefix in frontmatter tags — Obsidian strips it but it is redundant and looks cluttered.
+     - For more detailed tagging logic, refer to the [Obsidian Tagging Specialist prompt](./swordfish-obsidian-tag-reference.md).
+   - **Tag Format Verification:** Always validate against the target application's rendering behavior, not just syntax validity.
+     When working with Obsidian, confirm that YAML format matches what Obsidian's Properties UI expects
+     (block-style lists for tags). Cross-reference the skill's own template examples against generated output
+     before declaring a file correct.
    - Convert standard Markdown links to `[[wikilinks]]` if appropriate for the context.
    - Ensure any admonitions or alerts are converted to Obsidian callout syntax (e.g., `> [!info]`).
 
