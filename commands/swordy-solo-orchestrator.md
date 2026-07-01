@@ -1,7 +1,8 @@
 ---
 name: swordy-solo-orchestrator
 description: Orchestrates a multi-phase challenge-solving workflow within the same session using swordy-* skills. Each phase reads its SKILL.md for workflow knowledge and executes directly — no agents spawned. Phase artifacts are stored as handover documents that feed the next phase.
-usage: /swordy-solo-orchestrator [problem_statement | file_path]
+argument-hint: "[file_path] [problem_statement] [plan_file]"
+usage: /swordy-solo-orchestrator [file_path] [problem_statement] [plan_file_path]
 ---
 
 # Swordy Solo Orchestrator: Same-Session Workflow Orchestration
@@ -51,6 +52,7 @@ All artifacts are written to the **project repo** under `docs/{phase}/`. The wor
 ### Artifact Verification & Transition Contract
 
 After writing each artifact:
+
 1. **Append a "Phase Transition Contract" section** to the bottom of the artifact (see `docs/designs/phase-transition-contract.md` for schema).
    - Include: Start/End timestamps, SHA256 hash, and a bulleted **Proof of Work (PoW)** list of actual tool calls made.
 2. **Read it back** to confirm content and contract were written correctly.
@@ -60,7 +62,6 @@ After writing each artifact:
    - **Substance:** Artifact is substantive (not "thin").
    - **Duration:** Timing is reasonable.
 4. **Verdict:** If verification fails, the phase is **REJECTED**; the agent must perform missing work and regenerate the artifact. If it passes, the transition is **APPROVED**.
-
 
 ## Orchestration Protocol (Same Session)
 
@@ -118,12 +119,22 @@ For each phase, follow this pattern:
 | Retro | All prior phase handovers exist | Use available handovers; mark missing as "N/A" |
 
 ## Problem Statement
-**The problem statement is provided as an argument to this command.**
 
-- If the argument is a string, use it directly.
-- If the argument is a file path, `Read` the file and use its content.
+**`$1` — file path:** If `$1` is a file path, `Read` the file and use its content as the problem statement.
 
-**Default Problem Statement (if no argument):** Perform deterministic topological sort on DAG `{"X":["Y","Z"],"Y":["W"],"Z":["W"],"W":[]}` with cycle detection, returning `["X","Z","Y","W"]`.
+**`$2` — problem string:** If `$1` is a string (not a file), use it directly as the problem statement.
+
+**`$3` — plan file:** If `$3` is a file path, skip Explore and Plan, proceed to Execute using it as the plan artifact.
+
+**Default problem (no args):** Deterministic topological sort on DAG `{"X":["Y","Z"],"Y":["W"],"Z":["W"],"W":[]}` with cycle detection, returning `["X","Z","Y","W"]`.
+
+## Plan File (`$3`)
+
+A pre-existing plan file path. If `$3` is provided, the agent **skips Explore and Plan**, goes directly to **Execute**.
+
+- The plan file must follow the same structure as `docs/plans/{YYYYMMDDHHMM}__{feature-slug}/plan.md` (see `references/plan_template.md`).
+- If `$3` is given but does not exist, the agent falls back to running Explore then Plan as normal.
+- If `$3` is not provided, the agent runs Explore then Plan as normal.
 
 ## Quick Reference
 
