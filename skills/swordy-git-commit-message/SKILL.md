@@ -37,19 +37,20 @@ Not Applicable. The skill's frontmatter description defines when to use it.
 
 ## Output Format
 
-Provide only the commit message with no leading whitespace:
+Provide only the commit message with no leading whitespace, no code block wrapper, no markdown formatting around the message itself.
 
-```
-Subject line (under 72 characters)
+### Example output
 
-Optional body paragraphs if the change needs more explanation.
-Each paragraph wrapped at 72 characters, separated by blank lines.
-```
+docs: Update configuration documentation
+
+Add README and project documentation files.
+Remove deprecated provider entries and update
+docs to match current configuration state.
 
 ## Examples
 
-- `Add Bank of America checking account plugin`
-- `Fix plugin selection logic for Bank of America files`
-- `Refactor CSV preprocessing to handle amount formatting`
-- `Update test cases to reflect new plugin architecture`
-- `docs: Add plugin development guidelines`
+- Add Bank of America checking account plugin
+- Fix plugin selection logic for Bank of America files
+- Refactor CSV preprocessing to handle amount formatting
+- Update test cases to reflect new plugin architecture
+- docs: Add plugin development guidelines
