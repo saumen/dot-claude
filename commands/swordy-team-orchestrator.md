@@ -1,6 +1,7 @@
 ---
 name: swordy-team-orchestrator
 description: Runs a multi-agent team-based orchestration to solve a challenge using swordy-* skills. A teammate read an assigned SKILL.md files for workflow knowledge and execute work directly — they do NOT use the Skill tool (that would create a circular agent spawn loop).
+disable-model-invocation: true
 usage: /swordy-team-orchestrator [problem_statement | file_path]
 ---
 

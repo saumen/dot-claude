@@ -1,6 +1,7 @@
 ---
 name: swordy-solo-orchestrator
 description: Orchestrates a multi-phase challenge-solving workflow within the same session using swordy-* skills. Each phase reads its SKILL.md for workflow knowledge and executes directly — no agents spawned. Phase artifacts are stored as handover documents that feed the next phase.
+disable-model-invocation: true
 argument-hint: "[file_path] [problem_statement] [plan_file]"
 usage: /swordy-solo-orchestrator [file_path] [problem_statement] [plan_file_path]
 ---

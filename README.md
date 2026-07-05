@@ -1,7 +1,6 @@
 # Claude Code Personal Configuration Directory
 
-This directory (`~/.claude`) contains the personal configuration, custom commands,
-skills, agents, and plugins for Claude Code.
+This directory (`~/.claude`) contains the personal configuration, custom commands, skills, agents, and plugins for Claude Code.
 
 ## What This Directory Is
 
@@ -27,6 +26,7 @@ A centralized workspace for extending Claude Code with custom behavior:
 | `projects/` | Per-project CLAUDE.md files and settings overrides |
 | `plugins/` | Installed plugins and marketplace cache |
 | `memory/` | File-based memory entries |
+| `memories/` | Historical memory notes |
 | `scripts/` | Utility scripts (hooks, guards) |
 | `env-models` | Environment-specific model configuration overrides (JSON file) |
 | `docs/plans/` | Implementation planning documents |
@@ -42,6 +42,9 @@ Slash commands live in `commands/*.md` and are triggered with `/command-name`. A
 - `/swordy-plan-self-improve` — Self-improvement planning
 - `/migrate-skills` — Migrate skills workflow
 - `/review-skill-migration-plan` — Review skill migration plan
+- `/swordy-docs-sync` — Sync README.md and AGENTS.md with actual project state
+- `/swordy-refactor-docs` — Refactor documentation files into organized sub-files
+- `/swordy-verify-docs` — Verify documentation accuracy against actual project state
 
 See [`AGENTS.md`](AGENTS.md) for the full command list with descriptions.
 
@@ -57,6 +60,7 @@ Skills live in `skills/` with a `SKILL.md` entrypoint. Each skill defines a stru
 | **swordy-fix-markdown** | Fix markdown lint errors iteratively |
 | **swordy-git-commit-message** | Generate git commit messages from staged changes |
 | **swordy-kid-mode** | Kid-friendly AI assistant |
+| **swordy-kid-math** | Kid-friendly math quiz with addition and subtraction |
 | **swordy-obsidian-format** | Convert Markdown to Obsidian format |
 | **swordy-plan-execute** | Execute structured plan documents |
 | **swordy-plan-feature** | Plan new features with decomposition |

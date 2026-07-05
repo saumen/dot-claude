@@ -15,6 +15,9 @@ This project uses multiple markdown files, each with a distinct audience and sco
 | `memory/*.md` | All | Individual memory entries with YAML frontmatter |
 | `memories/*.md` | All | Historical memory notes |
 | `docs/plans/*.md` | Implementation tracking | Planning documents — no implementation snippets |
+| `commands/swordy-refactor-docs.md` | AI agents | Refactoring workflow for documentation files |
+| `commands/swordy-verify-docs.md` | AI agents | Verification workflow for documentation accuracy |
+| `commands/swordy-docs-sync.md` | AI agents | Sync README.md and AGENTS.md with actual project state |
 
 **Rule:** If content belongs to a user-facing guide (setup, usage, overview), it goes in README/CLAUDE. If it's developer/AI guidance (structure, conventions, commands, scripts), it goes in this file or in the dedicated guideline files linked above.
 
@@ -36,17 +39,21 @@ This project uses multiple markdown files, each with a distinct audience and sco
 │   ├── swordy-agent-markdown-compact.md
 │   ├── swordy-agent-planner.md
 │   └── swordy-agent-reviewer.md
-├── commands/              # 5 custom slash commands
+├── commands/              # 8 custom slash commands
 │   ├── migrate-skills.md
 │   ├── review-skill-migration-plan.md
+│   ├── swordy-docs-sync.md
 │   ├── swordy-plan-self-improve.md
+│   ├── swordy-refactor-docs.md
 │   ├── swordy-solo-orchestrator.md
-│   └── swordy-team-orchestrator.md
-├── skills/                # 13 custom skills (12 swordy-*, 1 trip-drive-times)
+│   ├── swordy-team-orchestrator.md
+│   └── swordy-verify-docs.md
+├── skills/                # 14 custom skills (13 swordy-*, 1 trip-drive-times)
 │   ├── swordy-compact-markdown/
 │   ├── swordy-explore/
 │   ├── swordy-fix-markdown/
 │   ├── swordy-git-commit-message/
+│   ├── swordy-kid-math/
 │   ├── swordy-kid-mode/
 │   ├── swordy-obsidian-format/
 │   ├── swordy-plan-execute/
@@ -94,6 +101,9 @@ This project uses multiple markdown files, each with a distinct audience and sco
 | `/swordy-solo-orchestrator` | Launch solo agent orchestration |
 | `/swordy-team-orchestrator` | Launch multi-agent team orchestration |
 | `/swordy-plan-self-improve` | Self-improvement planning command |
+| `/swordy-docs-sync` | Sync README.md and AGENTS.md with actual project state |
+| `/swordy-refactor-docs` | Refactor documentation files into organized sub-files |
+| `/swordy-verify-docs` | Verify documentation accuracy against actual project state |
 | `/migrate-skills` | Migrate skills workflow |
 | `/review-skill-migration-plan` | Review skill migration plan |
 
@@ -116,6 +126,7 @@ This project uses multiple markdown files, each with a distinct audience and sco
 - Planning documents go in `docs/plans/`
 - Do not include implementation snippets in planning docs
 - Cross-reference between README.md (user-facing) and AGENTS.md (developer-facing)
+- Use `/swordy-docs-sync` to keep README.md and AGENTS.md in sync with actual project state
 
 ## Agent-Specific Instructions
 
@@ -177,3 +188,8 @@ The following files are managed by the system — do not manually edit:
 - `daemon/*` — Daemon state
 - `statsig/*` — Statsig telemetry
 - `telemetry/*` — Telemetry data
+- `sessions/*` — Session state files
+- `todos/*` — Task/todo state files
+- `jobs/pins.json` — Job pin state
+- `.active-skill` — Currently active skill file
+- `.last-cleanup` — Last cleanup timestamp

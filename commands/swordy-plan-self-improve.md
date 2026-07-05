@@ -1,3 +1,9 @@
+---
+name: swordy-plan-self-improve
+description: Execute a recursive plan-and-review cycle to finalize an implementation plan. Reviews with swordy-review, fixes with swordy-plan-feature or swordy-skill-manager, loops until 100% sign-off.
+disable-model-invocation: true
+---
+
 # Command: Recursive self-improvise planner
 
 Please execute a recursive plan-and-review cycle to finalize implementation plan.
