@@ -38,4 +38,5 @@ env-models
 .pi-lens
 .pi-subagents/
 skills/swordy-kid-mode/scripts/results.json
+skills/swordy-kid-mode/memory/
 .ruff_cache

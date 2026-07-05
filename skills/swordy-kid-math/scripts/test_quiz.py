@@ -18,9 +18,15 @@ class GameState:
     streak: int = 0
     best_streak: int = 0
     level_complete: bool = False
+    is_stopped: bool = False
 
     def max_for_level(self) -> int:
-        return {1: 9, 2: 99, 3: 999, 4: 9999, 5: 99999}[self.level]
+        return {
+            1: 9, 2: 19, 3: 29, 4: 49, 5: 99,
+            6: 199, 7: 299, 8: 499, 9: 999,
+            10: 1999, 11: 4999, 12: 9999,
+            13: 9999,  # bonus challenge — same range as level 12
+        }[self.level]
 
     def generate_question(self) -> tuple[int, int, str]:
         """Returns (a, b, op) where op is '+' or '-'."""
@@ -59,6 +65,33 @@ class GameState:
 
     def reset_streak(self):
         self.streak = 0
+
+    def advance_level(self) -> bool:
+        """Advance to next level. Returns False if already at max level (13)."""
+        if self.level >= 13:
+            return False
+        self.level += 1
+        self.reset_streak()
+        return True
+
+    def stop(self):
+        self.is_stopped = True
+
+    def is_game_over(self) -> bool:
+        return self.is_stopped or (self.level >= 13 and self.check_level_complete())
+
+    def check_non_numeric(self, answer: str) -> bool:
+        """Return True if the answer is a valid integer, accepting commas, leading zeros, + prefix."""
+        cleaned = answer.replace(",", "").replace(" ", "").strip()
+        if cleaned.startswith("+"):
+            cleaned = cleaned[1:]
+        if not cleaned:
+            return False
+        try:
+            int(cleaned)
+            return True
+        except (ValueError, TypeError):
+            return False
 
     def status_line(self) -> str:
         return (
@@ -100,7 +133,7 @@ def test_question_generation():
     gs = GameState()
     random.seed(42)  # Reproducible
 
-    for level in range(1, 6):
+    for level in range(1, 14):
         gs.level = level
         max_val = gs.max_for_level()
         count = 0
@@ -269,7 +302,7 @@ def test_subtraction_non_negative():
     gs = GameState()
     random.seed(123)
 
-    for level in range(1, 6):
+    for level in range(1, 14):
         gs.level = level
         for _ in range(200):
             a, b, op = gs.generate_question()
@@ -286,7 +319,7 @@ def test_all_levels_produce_questions():
     gs = GameState()
     random.seed(999)
 
-    for level in range(1, 6):
+    for level in range(1, 14):
         gs.level = level
         questions = []
         for _ in range(50):
@@ -300,6 +333,167 @@ def test_all_levels_produce_questions():
     return True
 
 
+
+
+def test_victory_at_level_13():
+    """Verify game ends with victory message at level 13 completion."""
+    gs = GameState(level=13)
+
+    # Simulate 10 correct answers at level 13
+    for _ in range(10):
+        a, b, op = gs.generate_question()
+        expected = a + b if op == "+" else a - b
+        _, expected = gs.check_answer(a, b, op, expected)
+        gs.record_correct()
+
+    assert gs.check_level_complete(), "Should detect level 13 completion"
+
+    # advance_level should return False at max level
+    result = gs.advance_level()
+    assert result is False, "advance_level should return False at level 13"
+    assert gs.is_game_over(), "Game should be over after level 13 completion"
+
+    print("  Victory at level 13: game over, no further questions ✓")
+    return True
+
+
+def test_stop_done_ending():
+    """Verify stop/done ends the game and shows summary."""
+    gs = GameState(level=1)
+
+    # Answer 3 questions
+    for _ in range(3):
+        a, b, op = gs.generate_question()
+        expected = a + b if op == "+" else a - b
+        _, expected = gs.check_answer(a, b, op, expected)
+        gs.record_correct()
+
+    assert gs.total_questions == 3
+    assert not gs.is_stopped
+
+    # Simulate stop
+    gs.stop()
+    assert gs.is_stopped, "Should be stopped after stop()"
+    assert gs.is_game_over(), "Game should be over"
+
+    # Verify summary values are correct
+    assert gs.total_questions == 3
+    assert gs.total_correct == 3
+    assert gs.wrong == 0
+    assert gs.best_streak == 3
+
+    print("  Stop/done ending: game over, summary preserved ✓")
+    return True
+
+
+def test_non_numeric_input():
+    """Verify non-numeric input is detected and does not affect counters."""
+    gs = GameState(level=1)
+
+    # Generate a question but do not record an answer
+    gs.generate_question()
+
+    # Non-numeric answers should return False
+    assert gs.check_non_numeric("hello") is False, "Should reject 'hello'"
+    assert gs.check_non_numeric("") is False, "Should reject empty string"
+    assert gs.check_non_numeric("I don't know") is False, "Should reject 'I don't know'"
+    assert gs.check_non_numeric("5 and 3") is False, "Should reject '5 and 3'"
+
+    # Valid numbers should return True
+    assert gs.check_non_numeric("5") is True, "Should accept '5'"
+    assert gs.check_non_numeric("0") is True, "Should accept '0'"
+    assert gs.check_non_numeric("-3") is True, "Should accept '-3'"
+
+    # Counters should remain at zero (non-numeric input does not increment)
+    assert gs.total_questions == 0
+    assert gs.total_correct == 0
+    assert gs.wrong == 0
+    assert gs.streak == 0
+
+    print("  Non-numeric input: rejected, counters unchanged ✓")
+    return True
+def test_formatted_numbers():
+    """Verify numbers with commas, leading zeros, and + prefix are accepted."""
+    gs = GameState(level=1)
+
+    assert gs.check_non_numeric("1,000") is True, "Should accept '1,000'"
+    assert gs.check_non_numeric("007") is True, "Should accept '007'"
+    assert gs.check_non_numeric("+5") is True, "Should accept '+5'"
+    assert gs.check_non_numeric(" 42 ") is True, "Should accept ' 42 '"
+    assert gs.check_non_numeric("1 000") is True, "Should accept '1 000'"
+
+    # Counters should remain at zero (non-numeric input does not increment)
+    assert gs.total_questions == 0
+    assert gs.total_correct == 0
+    assert gs.wrong == 0
+    assert gs.streak == 0
+
+    print("  Formatted numbers: accepted, counters unchanged ✓")
+    return True
+
+
+def test_status_line_after_wrong():
+    """Verify status line is correct after a wrong answer."""
+    gs = GameState(level=1)
+
+    # One correct answer
+    a, b, op = gs.generate_question()
+    expected = a + b if op == "+" else a - b
+    _, expected = gs.check_answer(a, b, op, expected)
+    gs.record_correct()
+
+    line = gs.status_line()
+    assert "🔥 1/10" in line, f"Streak should be 1: {line}"
+    assert "❌ 0" in line, f"Wrong should be 0: {line}"
+    assert "Score: 1/1" in line, f"Score should be 1/1: {line}"
+
+    # One wrong answer
+    a, b, op = gs.generate_question()
+    expected = a + b if op == "+" else a - b
+    _, expected = gs.check_answer(a, b, op, expected + 999)
+    gs.record_wrong()
+
+    line = gs.status_line()
+    assert "🔥 0/10" in line, f"Streak should be 0: {line}"
+    assert "❌ 1" in line, f"Wrong should be 1: {line}"
+    assert "Score: 1/2" in line, f"Score should be 1/2: {line}"
+    assert "Q: 2" in line, f"Q should be 2: {line}"
+
+    print("  Status line after wrong: correct values ✓")
+    return True
+
+
+def test_score_0_0_initial():
+    """Verify Score: 0/0 displays correctly before any questions."""
+    gs = GameState(level=1)
+    line = gs.status_line()
+    assert "Score: 0/0" in line, f"Score should be 0/0 initially: {line}"
+    assert "Q: 0" in line, f"Q should be 0 initially: {line}"
+    assert "🔥 0/10" in line, f"Streak should be 0 initially: {line}"
+
+    print("  Score 0/0 initial: no crash, correct display ✓")
+    return True
+
+
+def test_advance_level_method():
+    """Verify advance_level increments level and resets streak."""
+    gs = GameState(level=2)
+
+    # Build a streak
+    for _ in range(5):
+        gs.record_correct()
+    assert gs.streak == 5, f"Streak should be 5: {gs.streak}"
+
+    # Advance level
+    result = gs.advance_level()
+    assert result is True, "advance_level should return True"
+    assert gs.level == 3, f"Level should be 3: {gs.level}"
+    assert gs.streak == 0, f"Streak should reset: {gs.streak}"
+    assert gs.total_correct == 5, "total_correct should persist"
+    assert gs.best_streak == 5, "best_streak should persist"
+
+    print("  advance_level: level up, streak reset, counters preserved ✓")
+    return True
 def run_all():
     tests = [
         ("Status line format", test_status_line_format),
@@ -312,10 +506,14 @@ def run_all():
         ("No variable ambiguity", test_status_line_no_ambiguity),
         ("Subtraction non-negative", test_subtraction_non_negative),
         ("All levels produce questions", test_all_levels_produce_questions),
+        ("Victory at level 13", test_victory_at_level_13),
+        ("Stop/done ending", test_stop_done_ending),
+        ("Non-numeric input", test_non_numeric_input),
+        ("Status line after wrong", test_status_line_after_wrong),
+        ("Score 0/0 initial", test_score_0_0_initial),
+        ("advance_level method", test_advance_level_method),
+        ("Formatted numbers", test_formatted_numbers),
     ]
-
-    print("=" * 60)
-    print("swordy-kid-math skill — logic test harness")
     print("=" * 60)
 
     passed = 0
