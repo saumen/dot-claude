@@ -18,8 +18,9 @@ A centralized workspace for extending Claude Code with custom behavior:
 | Component | Description |
 | :--- | :--- |
 | `settings.json` | Global Claude Code settings (env vars, permissions, model, theme, hooks) |
-| `CLAUDE.md` | Primary human-facing documentation for this directory |
+| `CLAUDE.md` | System documentation loaded into agent context |
 | `README.md` | This file — directory overview and usage guide |
+| `AGENTS.md` | Developer/AI agent guidelines (structure, conventions, commands) |
 | `commands/` | Custom slash commands (e.g., `/swordy-solo-orchestrator`) |
 | `skills/` | Custom agent skills with `SKILL.md` entrypoints |
 | `agents/` | Specialized sub-agent definitions (Planner, Executor, Reviewer, etc.) |
@@ -45,8 +46,7 @@ Slash commands live in `commands/*.md` and are triggered with `/command-name`. A
 - `/swordy-docs-sync` — Sync README.md and AGENTS.md with actual project state
 - `/swordy-refactor-docs` — Refactor documentation files into organized sub-files
 - `/swordy-verify-docs` — Verify documentation accuracy against actual project state
-
-See [`AGENTS.md`](AGENTS.md) for the full command list with descriptions.
+- `/swordy-manage-llama-model` — Add or edit llama.cpp server provider models from HuggingFace GGUF repos. For vLLM models, use /swordy-manage-vllm-model instead.
 
 ## Custom Skills
 
@@ -80,12 +80,13 @@ Agents live in `agents/*.md` as specialized sub-agent definitions:
 - **swordy-agent-fix-markdown** — Markdown lint fixing agent
 - **swordy-agent-git-commit-message** — Git commit message agent
 - **swordy-agent-markdown-compact** — Markdown compaction agent
+- **swordy-agent-manage-llama-model** — Llama model management agent
 - **swordy-agent-planner** — Planning agent
 - **swordy-agent-reviewer** — Code review agent
 
 ## Memory System
 
-Memory uses a file-based approach indexed in [`MEMORY.md`](MEMORY.md). Individual memory files live in `memory/` with YAML frontmatter to categorize entries (`user`, `feedback`, `project`, `reference`). Memory is loaded automatically into conversation context.
+Memory uses a file-based approach indexed in `MEMORY.md`. Individual memory files live in `memory/` with YAML frontmatter to categorize entries (`user`, `feedback`, `project`, `reference`). Memory is loaded automatically into conversation context.
 
 Historical memory notes are stored in `memories/`.
 
@@ -100,4 +101,4 @@ Per-project configuration lives in `projects/<project-name>/`. Each project can 
 
 ---
 
-_Note: This directory is managed by Claude Code. Manual edits should be handled with care to avoid disrupting system-managed files._
+_Note: This directory is managed by the docs-sync prompt. Manual edits should be handled with care to avoid disrupting system-managed files._

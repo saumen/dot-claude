@@ -9,40 +9,42 @@ This project uses multiple markdown files, each with a distinct audience and sco
 | File | Audience | Scope |
 |---|---|---|
 | [`README.md`](README.md) | End users | Directory overview, setup, workflow, feature usage |
-| `CLAUDE.md` | End users | Primary human-facing documentation (legacy — see README.md) |
+| `CLAUDE.md` | System | Documentation loaded into agent context at session start |
 | `AGENTS.md` (this file) | Developers & AI assistants | Project structure, commands, skills, conventions, commit guidelines |
-| [`MEMORY.md`](MEMORY.md) | All | Index for the file-based memory system |
-| `memory/*.md` | All | Individual memory entries with YAML frontmatter |
-| `memories/*.md` | All | Historical memory notes |
-| `docs/plans/*.md` | Implementation tracking | Planning documents — no implementation snippets |
 | `commands/swordy-refactor-docs.md` | AI agents | Refactoring workflow for documentation files |
 | `commands/swordy-verify-docs.md` | AI agents | Verification workflow for documentation accuracy |
 | `commands/swordy-docs-sync.md` | AI agents | Sync README.md and AGENTS.md with actual project state |
+| `memory/*.md` | All | Individual memory entries with YAML frontmatter |
+| `memories/*.md` | All | Historical memory notes |
+| `docs/plans/*.md` | Implementation tracking | Planning documents — no implementation snippets |
 
-**Rule:** If content belongs to a user-facing guide (setup, usage, overview), it goes in README/CLAUDE. If it's developer/AI guidance (structure, conventions, commands, scripts), it goes in this file or in the dedicated guideline files linked above.
+**Rule:** If content belongs to a user-facing guide (setup, usage, overview), it goes in README. If it's developer/AI guidance (structure, conventions, commands, scripts), it goes in this file or in the dedicated guideline files linked above. Planning docs stay in `docs/plans/`.
 
 ## Project Structure & Module Organization
 
 ```
 ~/.claude/
-├── CLAUDE.md              # Primary human-facing docs (legacy — see README.md)
+├── CLAUDE.md              # System documentation loaded into agent context
 ├── README.md              # Human-facing directory overview (primary)
 ├── AGENTS.md              # This file — developer/AI guidelines
-├── MEMORY.md              # Memory index (max 200 lines, entries <150 chars)
 ├── settings.json          # Global Claude Code settings (env, permissions, model, hooks)
 ├── .gitignore             # Git ignore rules (system-managed dirs, caches)
-├── agents/                # 7 specialized sub-agent definitions
+├── env-models             # Environment-specific model configuration (JSON)
+├── mcp-needs-auth-cache.json  # MCP auth cache (auto-managed)
+├── agents/                # 8 specialized sub-agent definitions
 │   ├── swordy-agent-execute.md
 │   ├── swordy-agent-explorer.md
 │   ├── swordy-agent-fix-markdown.md
 │   ├── swordy-agent-git-commit-message.md
 │   ├── swordy-agent-markdown-compact.md
+│   ├── swordy-agent-manage-llama-model.md
 │   ├── swordy-agent-planner.md
 │   └── swordy-agent-reviewer.md
-├── commands/              # 8 custom slash commands
+├── commands/              # 9 custom slash commands
 │   ├── migrate-skills.md
 │   ├── review-skill-migration-plan.md
 │   ├── swordy-docs-sync.md
+│   ├── swordy-manage-llama-model.md
 │   ├── swordy-plan-self-improve.md
 │   ├── swordy-refactor-docs.md
 │   ├── swordy-solo-orchestrator.md
@@ -66,14 +68,17 @@ This project uses multiple markdown files, each with a distinct audience and sco
 ├── scripts/               # Utility scripts
 │   ├── md-prettier-hook.sh  # Post-write markdown prettier hook
 │   └── skill-guard/       # Skill execution guard (Python project)
-├── projects/              # 46 per-project CLAUDE.md files and settings
+│       ├── pyproject.toml
+│       ├── src/skill_guard/
+│       └── tests/
+├── projects/              # Per-project CLAUDE.md files and settings
 ├── plugins/               # Installed plugins and marketplace cache
 ├── memory/                # 2 memory files (YAML frontmatter)
 ├── memories/              # 1 historical memory note
-├── env-models             # Environment-specific model configuration file (JSON)
 ├── docs/plans/            # Implementation planning documents
+├── cache/                 # Cache files (changelog.md)
 ├── history.jsonl          # Conversation history (auto-managed — do not edit)
-├── todos/                 # Task/todo JSON files
+├── tasks/                 # Task state directories
 ├── sessions/              # Active session state
 ├── session-env/           # Session environment snapshots
 ├── file-history/          # File change history
@@ -89,8 +94,10 @@ This project uses multiple markdown files, each with a distinct audience and sco
 ├── teams/                 # Team state
 ├── ide/                   # IDE integration state
 ├── .pi-lens/              # Pi lens cache and state
+├── .pi-subagents/         # Pi subagent artifacts
 ├── .active-skill          # Currently active skill
-└── .last-cleanup          # Last cleanup timestamp
+├── .last-cleanup          # Last cleanup timestamp
+└── .DS_Store              # macOS metadata (ignored)
 ```
 
 ## Build, Test, and Development Commands
@@ -105,6 +112,7 @@ This project uses multiple markdown files, each with a distinct audience and sco
 | `/swordy-refactor-docs` | Refactor documentation files into organized sub-files |
 | `/swordy-verify-docs` | Verify documentation accuracy against actual project state |
 | `/migrate-skills` | Migrate skills workflow |
+| `/swordy-manage-llama-model` | Add or edit llama.cpp server provider models from HuggingFace GGUF repos |
 | `/review-skill-migration-plan` | Review skill migration plan |
 
 ### Post-Write Hook
@@ -113,7 +121,7 @@ This project uses multiple markdown files, each with a distinct audience and sco
 
 ### Skill Guard
 
-`scripts/skill-guard/` is a Python project that guards skill execution. It includes tests under `scripts/skill-guard/tests/`.
+`scripts/skill-guard/` is a Python project that guards skill execution. Run tests with `cd scripts/skill-guard && python -m pytest`.
 
 ## Commit & Pull Request Guidelines
 
@@ -181,7 +189,6 @@ The following files are managed by the system — do not manually edit:
 - `plugins/plugin-catalog-cache.json` — Plugin catalog cache
 - `plugins/blocklist.json` — Plugin blocklist
 - `mcp-needs-auth-cache.json` — MCP auth cache
-- `stats-cache.json` — Stats cache
 - `session-env/*` — Session environment snapshots
 - `file-history/*` — File change history
 - `backups/*` — Backup files
@@ -189,7 +196,7 @@ The following files are managed by the system — do not manually edit:
 - `statsig/*` — Statsig telemetry
 - `telemetry/*` — Telemetry data
 - `sessions/*` — Session state files
-- `todos/*` — Task/todo state files
+- `tasks/*` — Task state directories
 - `jobs/pins.json` — Job pin state
 - `.active-skill` — Currently active skill file
 - `.last-cleanup` — Last cleanup timestamp

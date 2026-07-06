@@ -24,8 +24,8 @@ Resolve path aliases before any operation:
 
 | Alias | Full Path |
 |---|---|
-| `$REFAC` | `/Users/swordfish/.claude/agent/prompts/swordy-refactor-docs.md` |
-| `$VERIFY` | `/Users/swordfish/.claude/agent/prompts/swordy-verify-docs.md` |
+| `$REFAC` | `/Users/swordfish/.claude/commands/swordy-refactor-docs.md` |
+| `$VERIFY` | `/Users/swordfish/.claude/commands/swordy-verify-docs.md` |
 
 Read both reference prompts before starting. They contain the detailed workflows for refactoring and verification.
 
@@ -62,10 +62,10 @@ If either file exists, audit it against the audience separation principle:
 
 ### If EITHER violation is found
 
-1. **Delegate** to a subagent for the refactoring workflow (saves context window):
-
+1. **Delegate** to a sub-agent for the refactoring workflow (saves context window):
+   Use the `Agent` tool with `subagent_type: swordy-agent-execute`:
    ```
-   subagent({ agent: "worker", task: `<read $REFAC and execute its Phase 0-5 loop on README.md and AGENTS.md in the current working directory>`, cwd: `$(pwd)` })
+   Agent({ subagent_type: "swordy-agent-execute", prompt: "Read /Users/swordfish/.claude/commands/swordy-refactor-docs.md and execute its Phase 0-5 loop on README.md and AGENTS.md in the current working directory" })
    ```
 
 2. Use the existing files as input — the refactoring tool will extract, reorganize, and redistribute content losslessly.
@@ -135,10 +135,10 @@ This project uses multiple markdown files, each with a distinct audience and sco
 |---|---|---|
 | [`README.md`](README.md) | End users | Setup, workspace layout, workflow, feature usage |
 | `AGENTS.md` (this file) | Developers & AI assistants | Project structure, testing commands, commit conventions, development guidance |
-| `.editorconfig` | All developers | Indentation, hard wrap, trailing newline rules for every file |
+| [`.editorconfig`](.editorconfig) | All developers | Indentation, hard wrap, trailing newline rules for every file (include only if present) |
 | `docs/plans/*.md` | Implementation tracking | Planning documents with TODO lists — no implementation snippets |
-| [`PYTHON_GUIDELINES.md`](PYTHON_GUIDELINES.md) | Python contributors | Coding standards for Python scripts |
-| [`SHELL_SCRIPTING_GUIDELINES.md`](SHELL_SCRIPTING_GUIDELINES.md) | Shell script contributors | Standards for shell scripting in the project |
+| [`PYTHON_GUIDELINES.md`](PYTHON_GUIDELINES.md) | Python contributors | Coding standards for Python scripts (include only if present) |
+| [`SHELL_SCRIPTING_GUIDELINES.md`](SHELL_SCRIPTING_GUIDELINES.md) | Shell script contributors | Standards for shell scripting in the project (include only if present) |
 
 **Rule:** If content belongs to a user-facing guide (setup, usage), it goes in README. If it's developer/AI guidance (standards, conventions, structure), it goes here or in the dedicated guideline files linked above. Planning docs stay in `docs/plans/`.
 
@@ -216,15 +216,15 @@ After writing, confirm:
 **Delegate** the verification workflow to subagents (saves context window, each audit is iterative and heavy):
 
 1. **Verify README.md**:
-
+   Use the `Agent` tool with `subagent_type: swordy-agent-reviewer`:
    ```
-   subagent({ agent: "worker", task: `<read $VERIFY and execute its full audit→fix→re-audit loop on README.md in $(pwd)>`, cwd: `$(pwd)` })
+   Agent({ subagent_type: "swordy-agent-reviewer", prompt: "Read /Users/swordfish/.claude/commands/swordy-verify-docs.md and execute its full audit→fix→re-audit loop on README.md in $(pwd)" })
    ```
 
 2. **Verify AGENTS.md**:
-
+   Use the `Agent` tool with `subagent_type: swordy-agent-reviewer`:
    ```
-   subagent({ agent: "worker", task: `<read $VERIFY and execute its full audit→fix→re-audit loop on AGENTS.md in $(pwd)>`, cwd: `$(pwd)` })
+   Agent({ subagent_type: "swordy-agent-reviewer", prompt: "Read /Users/swordfish/.claude/commands/swordy-verify-docs.md and execute its full audit→fix→re-audit loop on AGENTS.md in $(pwd)" })
    ```
 
 3. Read both subagent outputs. If either reports P0 or P1 findings:
