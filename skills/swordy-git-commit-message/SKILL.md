@@ -9,12 +9,6 @@ when_to_use: Use when generating a commit message, writing a commit message, or 
 # Generate Git Commit Message
 
 Analyze staged git changes and generate a clear, concise commit message following best practices.
-
-## Agent Routing
-
-- **Must be executed by spawning the swordy-agent-git-commit-message sub-agent.** Do not execute inline.
-- **Fallback:** If the swordy-agent-git-commit-message agent fails twice (stream disconnect or other error), run the workflow inline using this skill's steps. Do not retry the agent.
-
 ## Workflow
 
 1. **Analyze staged changes** — Run `git diff --cached` to understand what was modified.
