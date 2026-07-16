@@ -68,12 +68,16 @@ below would specify it. Otherwise, the inline workflow always applies.
    - Pick two random numbers within the level's range.
    - Randomly choose `+` or `−`.
    - For subtraction, ensure the first number ≥ second number (result ≥ 0).
+   - **Before displaying the question, compute the correct answer** (`a + b` or `a - b`) and hold it in context. You will need this exact value to evaluate the child's response.
    - Display the question in one line: "What is {a} + {b}?" or "What is {a} − {b}?"
 
-5. **Wait for the child's answer.** They type a number.
-   - If they type "stop" or "done", go to step 9 (end game).
-   - If they type something that is not a number (e.g., "hello", "", "I don't know"), reply with something like "Hmm, {name}, can you type just a number?" and generate the same question again (do not increment any counters).
-   - Numbers may include commas (e.g. "1,000"), leading zeros (e.g. "007"), or a leading `+` (e.g. "+5") — all are valid.
+5. **Evaluate the child's answer.** Process in this exact order:
+   - **First,** if they type "stop" or "done", go to step 9 (end game).
+   - **Second,** if they type something that is not a number (e.g., "hello", "", "I don't know"), reply with something like "Hmm, {name}, can you type just a number?" and generate the same question again (do not increment any counters).
+   - **Third,** evaluate the numeric answer:
+     a. **Use the correct answer you computed in Step 4.** Do NOT recalculate — use the exact value you held in context.
+     b. **Parse the child's answer:** Strip any commas (e.g. "1,000" → "1000"), leading zeros (e.g. "007" → "7"), and leading `+` (e.g. "+5" → "5"). The result is a plain integer.
+     c. **Compare:** If the parsed answer equals the correct answer from step a, the child is correct. Otherwise, the child is wrong. **Do not guess — use the exact number from step a.**
    - **After updating counters, check if `streak` == 10:**
      - **If streak == 10:** This is your ENTIRE response — exactly three lines:
        1. A celebration line from the **Level Complete** pool below (with `{name}` substituted).
