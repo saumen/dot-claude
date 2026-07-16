@@ -20,6 +20,7 @@ Analyze staged git changes and generate a clear, concise commit message followin
    - Do not end with a period
    - Clearly describe the change and its purpose
    - Use conventional commit prefixes when appropriate (`feat:`, `fix:`, `docs:`, `refactor:`, `test:`, etc.)
+4. **Output** — Print the commit message as plain text. NEVER wrap in a code block, NEVER add markdown formatting.
 
 ## Parallelization Guidance
 
