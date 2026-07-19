@@ -4,6 +4,13 @@ description: Create or update README.md and AGENTS.md for the current working di
 disable-model-invocation: true
 argument-hint: "[no args — runs against current working directory]"
 ---
+---
+> **⚠️ DEPRECATED**: This command has been replaced by `swordy-docs-sync-inline.md`.
+>
+> **Why?** The inline version eliminates sub-agent delegation overhead, runs entirely in the current session, and adapts to different harness environments (omp vs standard).
+>
+> **Migration**: Use `/swordy-docs-sync-inline` instead. All functionality is preserved with improved efficiency and harness-agnostic operation.
+> ---
 
 # Sync README.md and AGENTS.md
 

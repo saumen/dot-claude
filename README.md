@@ -43,46 +43,12 @@ Slash commands live in `commands/*.md` and are triggered with `/command-name`. A
 - `/swordy-plan-self-improve` — Self-improvement planning
 - `/migrate-skills` — Migrate skills workflow
 - `/review-skill-migration-plan` — Review skill migration plan
-- `/swordy-docs-sync` — Sync README.md and AGENTS.md with actual project state
+- `/swordy-docs-sync-inline` — Sync README.md and AGENTS.md with actual project state (inline execution, no sub-agents)
 - `/swordy-refactor-docs` — Refactor documentation files into organized sub-files
 - `/swordy-verify-docs` — Verify documentation accuracy against actual project state
 - `/swordy-manage-llama-model` — Add or edit llama.cpp server provider models from HuggingFace GGUF repos. For vLLM models, use /swordy-manage-vllm-model instead.
 
-## Custom Skills
-
-Skills live in `skills/` with a `SKILL.md` entrypoint. Each skill defines a structured workflow. Available skills:
-
-| Skill | Description |
-| :--- | :--- |
-| **trip-drive-times** | Query Google Maps for traffic-adjusted drive times |
-| **swordy-compact-markdown** | Compact markdown documents losslessly |
-| **swordy-explore** | Structured codebase exploration workflow |
-| **swordy-fix-markdown** | Fix markdown lint errors iteratively |
-| **swordy-git-commit-message** | Generate git commit messages from staged changes |
-| **swordy-kid-mode** | Kid-friendly AI assistant |
-| **swordy-kid-math** | Kid-friendly math quiz with addition and subtraction |
-| **swordy-obsidian-format** | Convert Markdown to Obsidian format |
-| **swordy-plan-execute** | Execute structured plan documents |
-| **swordy-plan-feature** | Plan new features with decomposition |
-| **swordy-plan-refactor** | Plan code restructuring and improvements |
-| **swordy-retro** | Generate retrospective reports |
-| **swordy-review** | Structured code review workflow |
-| **swordy-skill-manager** | Plan and execute agent-skill pair creation |
-
 See [`AGENTS.md`](AGENTS.md) for skill invocation protocols and technical details.
-
-## Custom Agents
-
-Agents live in `agents/*.md` as specialized sub-agent definitions:
-
-- **swordy-agent-execute** — Task execution agent
-- **swordy-agent-explorer** — Codebase exploration agent
-- **swordy-agent-fix-markdown** — Markdown lint fixing agent
-- **swordy-agent-git-commit-message** — Git commit message agent
-- **swordy-agent-markdown-compact** — Markdown compaction agent
-- **swordy-agent-manage-llama-model** — Llama model management agent
-- **swordy-agent-planner** — Planning agent
-- **swordy-agent-reviewer** — Code review agent
 
 ## Memory System
 
@@ -100,5 +66,3 @@ Per-project configuration lives in `projects/<project-name>/`. Each project can 
 - `scripts/skill-guard/` — Skill execution guard (Python project with tests)
 
 ---
-
-_Note: This directory is managed by the docs-sync prompt. Manual edits should be handled with care to avoid disrupting system-managed files._

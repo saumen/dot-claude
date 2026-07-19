@@ -13,7 +13,7 @@ This project uses multiple markdown files, each with a distinct audience and sco
 | `AGENTS.md` (this file) | Developers & AI assistants | Project structure, commands, skills, conventions, commit guidelines |
 | `commands/swordy-refactor-docs.md` | AI agents | Refactoring workflow for documentation files |
 | `commands/swordy-verify-docs.md` | AI agents | Verification workflow for documentation accuracy |
-| `commands/swordy-docs-sync.md` | AI agents | Sync README.md and AGENTS.md with actual project state |
+| `commands/swordy-docs-sync-inline.md` | AI agents | Sync README.md and AGENTS.md with actual project state (inline execution, no sub-agents) |
 | `memory/*.md` | All | Individual memory entries with YAML frontmatter |
 | `memories/*.md` | All | Historical memory notes |
 | `docs/plans/*.md` | Implementation tracking | Planning documents — no implementation snippets |
@@ -108,7 +108,7 @@ This project uses multiple markdown files, each with a distinct audience and sco
 | `/swordy-solo-orchestrator` | Launch solo agent orchestration |
 | `/swordy-team-orchestrator` | Launch multi-agent team orchestration |
 | `/swordy-plan-self-improve` | Self-improvement planning command |
-| `/swordy-docs-sync` | Sync README.md and AGENTS.md with actual project state |
+| `/swordy-docs-sync-inline` | Sync README.md and AGENTS.md with actual project state (inline execution) |
 | `/swordy-refactor-docs` | Refactor documentation files into organized sub-files |
 | `/swordy-verify-docs` | Verify documentation accuracy against actual project state |
 | `/migrate-skills` | Migrate skills workflow |
@@ -134,7 +134,7 @@ This project uses multiple markdown files, each with a distinct audience and sco
 - Planning documents go in `docs/plans/`
 - Do not include implementation snippets in planning docs
 - Cross-reference between README.md (user-facing) and AGENTS.md (developer-facing)
-- Use `/swordy-docs-sync` to keep README.md and AGENTS.md in sync with actual project state
+- Use `/swordy-docs-sync-inline` to keep README.md and AGENTS.md in sync with actual project state
 
 ## Agent-Specific Instructions
 
