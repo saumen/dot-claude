@@ -44,17 +44,10 @@ when_to_use: >
    - Summary of fixes applied (e.g., "Fixed 3 MD060 table style errors, 1 MD024 duplicate heading")
    - Confirmation: "Linting complete with zero errors"
 
-## Agent Routing
+## Execution
 
-- **Must be executed by spawning the `swordy-agent-fix-markdown` sub-agent.** Do not implement inline.
-- **Fallback:** If the `swordy-agent-fix-markdown` agent fails twice (stream disconnect or other error), run the
-  workflow inline using this skill's steps. Do not retry the agent.
-
-## Parallelization Guidance
-
-Not Applicable. The fix-markdown workflow operates on a single file and must be executed sequentially to ensure
-accurate lint-fix iteration.
-
+The workflow runs inline directly — no sub-agent required. The bundled `fix-markdown.sh` script handles all
+automation: prettier wrapping, iterative lint-fix cycles, and zero-error verification.
 ## Scope
 
 **Use for:**

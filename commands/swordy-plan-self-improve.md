@@ -14,6 +14,9 @@ Follow these strict agentic rules until the cycle breaks:
 3. If the reviewer finds ANY actionable items or issues use `swordy-plan-feature` or `swordy-skill-manager` to address all issues and update the same planning document.
 2. Use checksum on the plan file to verify the plan file has been updated.
 4. If the reviewer finds absolutely NO actionable items and gives a 100% sign-off, exit the loop, present the final draft plan, and ask for user approval.
+## Skill locations
+
+All referenced skills (`swordy-review`, `swordy-plan-feature`, `swordy-skill-manager`) are located in the `~/.claude/skills/` directory.
 
 ## Store audit events
 
